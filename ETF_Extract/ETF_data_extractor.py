@@ -1,3 +1,4 @@
+#To extract the ETF's NAV,AUM,Tracking error,Expense ratio
 import pandas as PD
 #To bypass the security checks
 #https://github.com/ultrafunkamsterdam/undetected-chromedriver
