@@ -55,7 +55,7 @@ for rwCount in  df.index:
 		extracted_value=extracted_value.append({'NAV':NAV,'AUM':AUM,'Expense_Ratio':Expense_Ratio,'Sctr_Expense_Ratio':Sctr_Expense_Ratio,'Tracking_Error':Tracking_Error,'Asset_Tracking_Error':Asset_Tracking_Error,'Sector':etf_sector,'URL':etf_url},ignore_index=True)
 
 #Write the data into the excel file
-extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF_Data/ETFdetail.xlsx',index=False)
+extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail.xlsx',index=False)
 
 
 
