@@ -29,7 +29,7 @@ temp_rowdata=[]
 
 #Read the url file,using panda
  #Navigate to the location and read the data
-loc='/Volumes/Project/ETFAnalyser/ETF_Data/ETF_URL.xlsx'
+loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_URL.xlsx'
 df = PD.read_excel(loc,sheet_name = 'Main Data_Nifty')
 #Loop through the rows using "index",to extract the URL
 #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.index.html
@@ -54,7 +54,7 @@ for rwCount in  df.index:
 #https://www.geeksforgeeks.org/how-to-create-an-empty-dataframe-and-append-rows-columns-to-it-in-pandas
 		extracted_value=extracted_value.append({'NAV':NAV,'AUM':AUM,'Expense_Ratio':Expense_Ratio,'Sctr_Expense_Ratio':Sctr_Expense_Ratio,'Tracking_Error':Tracking_Error,'Asset_Tracking_Error':Asset_Tracking_Error,'Sector':etf_sector,'URL':etf_url},ignore_index=True)
 
-#Write the data into the csv file
+#Write the data into the excel file
 extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF_Data/ETFdetail.xlsx',index=False)
 
 
