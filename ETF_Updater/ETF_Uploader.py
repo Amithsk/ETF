@@ -3,7 +3,7 @@
 #To upload the Asset's Tracking error,Expense ratio
 import pandas as PD
 import pymysql
-
+import datetime
 #Asset():
 #updateAsset():
 #createAsset():
@@ -16,6 +16,7 @@ import pymysql
 
 #def updateAsset(connection_details):
 
+#To add the asset information to the DB
 def addAsset(connection_details,data_loc):
 	try:
 		print("Adding asset information")
@@ -29,8 +30,26 @@ def addAsset(connection_details,data_loc):
 		
 	except Exception as e:
 		raise e
-
-#def createAssetdetails(connection_details):
+#To add the asset related information(TrackingError,ExpenseRatio) to the DB
+def addAssetdetails(connection_details,data_loc,monthinfo):
+	try:
+		print("Adding asset related information")
+		insert_sql="INSERT INTO`etf_asset_details`(`asset_id`,`asset_trackingerror`,`asset_expenseratio`,`asset_month`)values(%s,%s,%s,%s)"
+		retrieve_sql ="SELECT `idetf_asset` FROM `etf_asset` WHERE `asset_info`=%s"
+		cursor=connection_details.cursor()
+		AssetDetails= PD.read_excel(data_loc,sheet_name = 'Data')
+		for lpcnt in AssetDetails.index:
+			assetCode = AssetDetails['Sector'][lpcnt]
+			assetTrackingError = AssetDetails['Asset_Tracking_Error'][lpcnt]
+			assetExpenseRatio=AssetDetails['Sctr_Expense_Ratio'][lpcnt]
+			#To retrieve the Asset code information from the DB
+			cursor.execute(retrieve_sql,assetCode)
+			assetCode_db = cursor.fetchone()
+			#To update the Asset detail information in the DB
+			values=(assetCode_db[0],assetTrackingError,assetExpenseRatio,monthinfo)
+			cursor.execute(insert_sql,values)
+	except Exception as e:
+		raise e
 
 #def createETF(connection_details):
 
@@ -61,9 +80,11 @@ def disconnect_db(connection_details):
 		print(whaterror)
 
 def main():
+	monthinfo = (datetime.datetime.now()).strftime("%b")
 	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail.xlsx'
 	connection_details=connect_db()
-	addAsset(connection_details,data_loc)
+	#addAsset(connection_details,data_loc)
+	addAssetdetails(connection_details,data_loc,monthinfo)
 	disconnect_db(connection_details)
 main()
 
