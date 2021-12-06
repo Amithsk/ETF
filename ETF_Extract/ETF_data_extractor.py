@@ -19,7 +19,7 @@ driver = uc.Chrome(r'/usr/local/Caskroom/chromedriver/96.0.4664.45/chromedriver'
 
 #Create empty dataframe with column name
 #https://www.kite.com/python/answers/how-to-create-an-empty-dataframe-with-column-names-in-python
-columnname=['NAV','AUM','Expense_Ratio','Sctr_Expense_Ratio','Tracking_Error','Asset_Tracking_Error','Sector','URL']
+columnname=['NAV','AUM','Expense_Ratio','Sctr_Expense_Ratio','Tracking_Error','Asset_Tracking_Error','Sector','ETFname','URL']
 extracted_value = PD.DataFrame(columns=columnname)
 
 #Empty list to hold the values
@@ -30,12 +30,13 @@ temp_rowdata=[]
 #Read the url file,using panda
  #Navigate to the location and read the data
 loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_URL.xlsx'
-df = PD.read_excel(loc,sheet_name = 'Main Data_Nifty')
+df = PD.read_excel(loc,sheet_name = 'dummy')
 #Loop through the rows using "index",to extract the URL
 #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.index.html
 for rwCount in  df.index:
 	etf_url=df['URL'][rwCount]
 	etf_sector=df['Sector'][rwCount]
+	etf_symbol=df['Symbol'][rwCount]
 	with driver:
 		driver.get(etf_url)
 		time.sleep(5)
@@ -50,12 +51,19 @@ for rwCount in  df.index:
 		Sctr_Expense_Ratio=elements[3].text
 		Tracking_Error=elements[4].text
 		Asset_Tracking_Error=elements[5].text
+#Extract the etfname(it was tricky)
+#Need to add the get_attribute function to get the text information from th H1		
+#https://stackoverflow.com/questions/43429788/python-selenium-finds-h1-element-but-returns-empty-text-string		
+		etfName = driver.find_element(By.XPATH,'//div[@class="jsx-3081538797 asset-name-wrapper"]/h1').get_attribute('textContent')
+		
+
 #Append the row details to the data frame using 'append' 
 #https://www.geeksforgeeks.org/how-to-create-an-empty-dataframe-and-append-rows-columns-to-it-in-pandas
-		extracted_value=extracted_value.append({'NAV':NAV,'AUM':AUM,'Expense_Ratio':Expense_Ratio,'Sctr_Expense_Ratio':Sctr_Expense_Ratio,'Tracking_Error':Tracking_Error,'Asset_Tracking_Error':Asset_Tracking_Error,'Sector':etf_sector,'URL':etf_url},ignore_index=True)
+		extracted_value=extracted_value.append({'NAV':NAV,'AUM':AUM,'Expense_Ratio':Expense_Ratio,'Sctr_Expense_Ratio':Sctr_Expense_Ratio,'Tracking_Error':Tracking_Error,'Asset_Tracking_Error':Asset_Tracking_Error,'Sector':etf_sector,'ETFname':etfName,'URL':etf_url},ignore_index=True)
+		print("\nExtracte values",NAV,AUM,etf_url,etf_sector,etf_symbol)
 
 #Write the data into the excel file
-extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail.xlsx',index=False)
+extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail_dummy.xlsx',index=False)
 
 
 
