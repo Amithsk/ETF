@@ -1,5 +1,6 @@
 #To extract the ETF's NAV,AUM,Tracking error,Expense ratio
 import pandas as PD
+import datetime
 #To bypass the security checks
 #https://github.com/ultrafunkamsterdam/undetected-chromedriver
 import undetected_chromedriver.v2 as uc
@@ -8,6 +9,7 @@ import time
 #To extract the values from the html tags
 #https://selenium-python.readthedocs.io/locating-elements.html#
 from selenium.webdriver.common.by import By
+
 
 options = webdriver.ChromeOptions()
 options.binary_location=r'/Applications/Google Chrome 2.app/Contents/MacOS/Google Chrome'
@@ -21,16 +23,13 @@ driver = uc.Chrome(r'/usr/local/Caskroom/chromedriver/96.0.4664.45/chromedriver'
 #https://www.kite.com/python/answers/how-to-create-an-empty-dataframe-with-column-names-in-python
 columnname=['NAV','AUM','Expense_Ratio','Sctr_Expense_Ratio','Tracking_Error','Asset_Tracking_Error','Sector','ETFname','URL']
 extracted_value = PD.DataFrame(columns=columnname)
-
-#Empty list to hold the values
-temp_rowdetails=[]
-temp_rowdata=[]
-
+#To get the month information
+monthinfo = (datetime.datetime.now()).strftime("%b")
 
 #Read the url file,using panda
  #Navigate to the location and read the data
 loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_URL.xlsx'
-df = PD.read_excel(loc,sheet_name = 'dummy')
+df = PD.read_excel(loc,sheet_name = 'Main Data_Nifty')
 #Loop through the rows using "index",to extract the URL
 #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.index.html
 for rwCount in  df.index:
@@ -63,7 +62,7 @@ for rwCount in  df.index:
 		print("\nExtracte values",NAV,AUM,etf_url,etf_sector,etf_symbol)
 
 #Write the data into the excel file
-extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail_dummy.xlsx',index=False)
+extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail_'+monthinfo+'.xlsx',index=False)
 
 
 
