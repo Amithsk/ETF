@@ -1,0 +1,38 @@
+How to organize the posts?
+How to customize the  'more tag' information ?
+
+Image:Done
+  How to set the featured image dimension ?
+   Currently it's blurred
+     Tried the 1200*628 this will give some what good but need to figure out which dimension is the best
+     1550*550 is the optimal size of the featured image
+
+Post
+   Should the feature image come first or not
+   How to move the author and other related information to bottom
+      Need to have author and date information
+      https://wordpress.org/support/topic/remove-name-date-category-no-comments-meta-data-from-blog-post/
+   Completed
+   How to align the posts
+
+
+Website:
+   Need to create the staging phase for the website
+
+ 
+
+
+ ETF data
+ ->Get the name of the ETF from the site and update in the excel sheet
+   ETF_data_extractor.py needs to be udpated to capture the value of the ETF's
+    Done
+
+->DB design
+   Need to add column,if the ETF is available in NSE/BSE ?
+
+->How to handle the ETF data extraction procees
+   Currently,we are hitting timeout session due to the huge number of entries
+   So I have splitted the entries into two session so that we don't face this issue
+   But this scenario needs to be handled via Program not manually executing it 
+
+
