@@ -27,7 +27,6 @@ def formatdata(etfAUM,etfExpenseRatio,etfTrackingError):
 		etfTrackingError=0
 	else:
 		#Decimal is used to avoid the issue faced while using float
-	
 		etfTrackingError=(D(re.sub('%','',str(etfTrackingError)))/100)
 	
 
@@ -92,6 +91,8 @@ def addETFdetails(connection_details,dataloc,monthinfo):
 	try:
 		print("Entering Add ETF details usecase")
 		cursor=connection_details.cursor()
+		retrieve_sql="SELECT `idetf`FROM	`etf` WHERE`etf_symbol`=%s"
+		insert_sql="INSERT INTO `etf_details`(`idetf_details`,`etf_aum`,`etf_tracking_error`,`etf_expense_ratio`,`etf_month`,`etf_fundhouse_name`)values(%s,%s,%s,%s,%s,%s)"
 		ETFDetails=PD.read_excel(dataloc,sheet_name='Data')
 		for lpcnt in ETFDetails.index:
 			etfTrackingError =ETFDetails['Tracking_Error'][lpcnt]
@@ -101,8 +102,11 @@ def addETFdetails(connection_details,dataloc,monthinfo):
 			#To get the ETF id information,we can also use ETF name
 			etfSymbol =ETFDetails['ETFSymbol'][lpcnt]
 			etfAUM,etfExpenseRatio,etfTrackingError=formatdata(etfAUM,etfExpenseRatio,etfTrackingError)
-			values=(etfAUM,etfTrackingError,etfExpenseRatio,monthinfo,etfFundhouse)
-			print("The values are ",values)
+			cursor.execute(retrieve_sql,etfSymbol)
+			etfid_details=cursor.fetchone()
+			values=(etfid_details[0],etfAUM,etfTrackingError,etfExpenseRatio,monthinfo,etfFundhouse)
+
+			cursor.execute(insert_sql,values)
 
 	except Exception as e:
 		raise e
