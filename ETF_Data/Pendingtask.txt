@@ -13,7 +13,8 @@ Post
       Need to have author and date information
       https://wordpress.org/support/topic/remove-name-date-category-no-comments-meta-data-from-blog-post/
    Completed
-   How to align the posts
+   How to align the posts:
+     Done with the help of the plugin
 
 
 Website:
@@ -34,5 +35,8 @@ Website:
    Currently,we are hitting timeout session due to the huge number of entries
    So I have splitted the entries into two session so that we don't face this issue
    But this scenario needs to be handled via Program not manually executing it 
+
+
+List of ETF's by AMC
 
 

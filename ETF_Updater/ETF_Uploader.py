@@ -9,14 +9,7 @@ import re
 #'0.0014000000000000002' huge numbers were returned,to avoid that Decimal was used
 #https://stackoverflow.com/questions/455612/limiting-floats-to-two-decimal-points
 from decimal import Decimal as D
-#Asset():
-#updateAsset():
-#createAsset():
-#createAssetdetails():
-#ETF():
-#createETF():
-#updateETF():
-#createETFdetails():
+
 
 #For some ETF the AUM,ExpenseRatio,TrackingError values might not be present,so need to convert into numerical value('0')
 #Expenseratio,TrackingError is returned in '0.20%' percentage format,need to convert into decimal format and remove '%'
@@ -34,6 +27,7 @@ def formatdata(etfAUM,etfExpenseRatio,etfTrackingError):
 		etfTrackingError=0
 	else:
 		#Decimal is used to avoid the issue faced while using float
+	
 		etfTrackingError=(D(re.sub('%','',str(etfTrackingError)))/100)
 	
 
@@ -79,16 +73,40 @@ def addETF(connection_details,dataloc):
 	try:
 		print("Entering Add ETF usecase")
 		cursor=connection_details.cursor()
+		retrieve_sql = "SELECT `idetf_asset`FROM `etf_asset` WHERE `asset_info`=%s"
+		insert_sql="INSERT INTO`etf`(`etf_name`,`etf_asset_category`,`etf_symbol`)values(%s,%s,%s)"
 		ETFDetails=PD.read_excel(dataloc,sheet_name='Data')
 		for lpcnt in ETFDetails.index:
-			etfAUM,etfTrackingError,etfExpenseRatio=formatdata(ETFDetails['AUM'][lpcnt],ETFDetails['Expense_Ratio'][lpcnt],ETFDetails['Tracking_Error'][lpcnt])
-			print("The value of tracking error",etfTrackingError)
-			print("The value of Expense_Ratio",etfExpenseRatio)
-			print("The value of the AUM",etfAUM)
+			etfAsset=ETFDetails['Sector'][lpcnt]
+			etfName=ETFDetails['ETFname'][lpcnt]
+			etfSymbol=ETFDetails['ETFSymbol'][lpcnt]
+			cursor.execute(retrieve_sql,etfAsset)
+			etfAssetdb=cursor.fetchone()
+			values=(etfName,etfAssetdb[0],etfSymbol)
+			#print("The values are ",values)
+			cursor.execute(insert_sql,values)
 	except Exception as e:
 		raise e
 
-#def createETFdetails(connection_details):
+def addETFdetails(connection_details,dataloc,monthinfo):
+	try:
+		print("Entering Add ETF details usecase")
+		cursor=connection_details.cursor()
+		ETFDetails=PD.read_excel(dataloc,sheet_name='Data')
+		for lpcnt in ETFDetails.index:
+			etfTrackingError =ETFDetails['Tracking_Error'][lpcnt]
+			etfExpenseRatio=ETFDetails['Expense_Ratio'][lpcnt]
+			etfAUM=ETFDetails['AUM'][lpcnt]
+			etfFundhouse=ETFDetails['ETF Fund house'][lpcnt]
+			#To get the ETF id information,we can also use ETF name
+			etfSymbol =ETFDetails['ETFSymbol'][lpcnt]
+			etfAUM,etfExpenseRatio,etfTrackingError=formatdata(etfAUM,etfExpenseRatio,etfTrackingError)
+			values=(etfAUM,etfTrackingError,etfExpenseRatio,monthinfo,etfFundhouse)
+			print("The values are ",values)
+
+	except Exception as e:
+		raise e
+
 
 def connect_db():
 	try:
@@ -114,11 +132,13 @@ def disconnect_db(connection_details):
 
 def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
-	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail_'+monthinfo+'.xlsx'
+	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail_'+monthinfo+'_Combined.xlsx'
 	connection_details=connect_db()
 	#addAsset(connection_details,data_loc)
 	#addAssetdetails(connection_details,data_loc,monthinfo)
-	addETF(connection_details,data_loc)
+	#addETF(connection_details,data_loc)
+	addETFdetails(connection_details,data_loc,monthinfo)
 	disconnect_db(connection_details)
+
 main()
 
