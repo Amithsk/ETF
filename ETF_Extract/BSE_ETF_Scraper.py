@@ -3,7 +3,6 @@
 #https://github.com/ultrafunkamsterdam/undetected-chromedriver
 import undetected_chromedriver.v2 as uc
 from selenium import webdriver
-from bs4 import BeautifulSoup as bs
 import time
 #To extract the values from the html tags
 #https://selenium-python.readthedocs.io/locating-elements.html#
