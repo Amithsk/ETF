@@ -19,7 +19,7 @@ options.binary_location=r'/Applications/Google Chrome 2.app/Contents/MacOS/Googl
 #Sets to create profile in chrome
 #https://stackoverflow.com/questions/50635087/how-to-open-a-chrome-profile-through-user-data-dir-argument-of-selenium
 options.user_data_dir = r'/Users/amithkanatt/Library/Application Support/Google/Chrome/Profile 1'
-driver = uc.Chrome(r'/usr/local/Caskroom/chromedriver/96.0.4664.45/chromedriver',options=options)
+driver = uc.Chrome(options=options)
 #To extract the column values
 #How to extract table value using selenium+python webdriver
 #https://www.lambdatest.com/blog/how-to-handle-web-table-in-selenium-webdriver/
