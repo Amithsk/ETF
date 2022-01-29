@@ -1,7 +1,7 @@
 
 #To bypass the security checks
 #https://github.com/ultrafunkamsterdam/undetected-chromedriver
-import undetected_chromedriver.v2 as uc
+import undetected_chromedriver as uc
 from selenium import webdriver
 import time
 #To extract the values from the html tags
