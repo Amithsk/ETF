@@ -66,5 +66,5 @@ if __name__ == '__main__':
 #Write the extracted information into data frame
 		df = PD.DataFrame(rowdata,columns=columnname)
 #Write the data into the csv file
-		df.to_excel(r'/Volumes/Project/WebScrapper/JVZOO/data/'+str(dateInfo)+'.xlsx',index=False)
+		df.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/BSE_daily_data'+str(dateInfo)+'.xlsx',index=False)
 		driver.quit()
