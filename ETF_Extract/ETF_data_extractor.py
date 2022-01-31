@@ -28,7 +28,7 @@ if __name__ == '__main__':
 #Read the url file,using panda
 #Navigate to the location and read the data
 	loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_URL.xlsx'
-	df = PD.read_excel(loc,sheet_name = 'Sheet2')
+	df = PD.read_excel(loc,sheet_name = 'Main Data_Nifty_1')
 #Loop through the rows using "index",to extract the URL
 #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.index.html
 	for rwCount in  df.index:
@@ -62,5 +62,5 @@ if __name__ == '__main__':
 			print("\n Extacted values AUM",AUM)
 			print("\nETF name",etfName)
 #Write the data into the excel file
-			extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail_'+monthinfo+'.xlsx',index=False)
+			extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETFdetail_'+monthinfo+'.xlsx',index=False)
 			driver.quit()
