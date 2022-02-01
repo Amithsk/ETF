@@ -4,6 +4,8 @@
 import undetected_chromedriver as uc
 from selenium import webdriver
 import time
+import datetime
+import shutil
 #To extract the values from the html tags
 #https://selenium-python.readthedocs.io/locating-elements.html#
 from selenium.webdriver.common.by import By
@@ -25,5 +27,14 @@ if __name__ == '__main__':
 #This option is very resuable one
 		downloadcsv= driver.find_element(By.XPATH,"//img[@title='csv']/parent::a")
 		driver.execute_script("arguments[0].click();",downloadcsv)
+
 		driver.quit()
+#code to move file from one location to another location
+# https://pynative.com/python-move-files/		
+		pattern = 'MW-ETF-'+(datetime.datetime.now()).strftime("%d-%b-%Y")+'.csv'
+		des=r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/NSE_daily_data'
+		src=r'/Users/amithkanatt/Downloads/'+pattern
+		print(src)
+		shutil.move(src,des)
+
 
