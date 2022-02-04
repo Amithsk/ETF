@@ -16,7 +16,7 @@ if __name__ == '__main__':
 #undetected_chromedriver require a profile information
 #Sets to create profile in chrome
 #https://stackoverflow.com/questions/50635087/how-to-open-a-chrome-profile-through-user-data-dir-argument-of-selenium
-	options.user_data_dir = r'/Users/amithkanatt/Library/Application Support/Google/Chrome/Profile 1'
+	#options.user_data_dir = r'/Users/amithkanatt/Library/Application Support/Google/Chrome/Profile 1'
 	driver = uc.Chrome(options=options)
 #Create empty dataframe with column name
 #https://www.kite.com/python/answers/how-to-create-an-empty-dataframe-with-column-names-in-python
@@ -28,7 +28,7 @@ if __name__ == '__main__':
 #Read the url file,using panda
 #Navigate to the location and read the data
 	loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_URL.xlsx'
-	df = PD.read_excel(loc,sheet_name = 'Main Data_Nifty_1')
+	df = PD.read_excel(loc,sheet_name = 'Failed')
 #Loop through the rows using "index",to extract the URL
 #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.index.html
 	for rwCount in  df.index:
@@ -62,5 +62,7 @@ if __name__ == '__main__':
 			print("\n Extacted values AUM",AUM)
 			print("\nETF name",etfName)
 #Write the data into the excel file
-			extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETFdetail_'+monthinfo+'.xlsx',index=False)
-			driver.quit()
+	extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETFdetail_'+monthinfo+'.xlsx',index=False)
+#https://www.browserstack.com/guide/close-browser-in-selenium
+#Closing the browser
+	driver.close()
