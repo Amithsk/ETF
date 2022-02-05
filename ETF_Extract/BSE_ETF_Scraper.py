@@ -1,4 +1,3 @@
-
 #To bypass the security checks
 #https://github.com/ultrafunkamsterdam/undetected-chromedriver
 import undetected_chromedriver as uc
@@ -18,7 +17,7 @@ if __name__ == '__main__':
 #Sets to create profile in chrome
 #https://stackoverflow.com/questions/50635087/how-to-open-a-chrome-profile-through-user-data-dir-argument-of-selenium
 
-	options.user_data_dir = r'/Users/amithkanatt/Library/Application Support/Google/Chrome/Profile 1'
+	#options.user_data_dir = r'/Users/amithkanatt/Library/Application Support/Google/Chrome/Profile 1'
 	driver = uc.Chrome(options=options)
 
 #To extract the column values
@@ -66,5 +65,7 @@ if __name__ == '__main__':
 #Write the extracted information into data frame
 		df = PD.DataFrame(rowdata,columns=columnname)
 #Write the data into the xlsx file
-		df.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/BSE_daily_data'+str(dateInfo)+'.xlsx',index=False)
-		driver.quit()
+		df.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/BSE_daily_data/'+str(dateInfo)+'.xlsx',index=False)
+#https://www.browserstack.com/guide/close-browser-in-selenium
+#Closing the browser
+		driver.close()
