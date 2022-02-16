@@ -30,15 +30,18 @@ if __name__ == '__main__':
 		time.sleep(5)
 		driver.execute_script("arguments[0].click();",downloadcsv)
 		time.sleep(5)
+#code to move file from one location to another location
+# https://pynative.com/python-move-files/		
+	
+		pattern = 'MW-ETF-'+(datetime.datetime.now()).strftime("%d-%b-%Y")+'.csv'
+		des=r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/NSE_daily_data'
+		src=r'/Users/amithkanatt/Downloads/'+pattern
+		print(src)
+		shutil.move(src,des)
+
 #https://www.browserstack.com/guide/close-browser-in-selenium
 #Closing the browser
 		driver.close()
-#code to move file from one location to another location
-# https://pynative.com/python-move-files/		
-	pattern = 'MW-ETF-'+(datetime.datetime.now()).strftime("%d-%b-%Y")+'.csv'
-	des=r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/NSE_daily_data'
-	src=r'/Users/amithkanatt/Downloads/'+pattern
-	print(src)
-	shutil.move(src,des)
+
 
 
