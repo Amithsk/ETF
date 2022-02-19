@@ -65,7 +65,7 @@ if __name__ == '__main__':
 #Write the extracted information into data frame
 		df = PD.DataFrame(rowdata,columns=columnname)
 #Write the data into the xlsx file
-		df.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/BSE_daily_data/'+str(dateInfo)+'.xlsx',index=False)
+		df.to_csv(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/BSE_daily_data/'+str(dateInfo)+'.csv',index=False)
 #https://www.browserstack.com/guide/close-browser-in-selenium
 #Closing the browser
 		driver.close()
