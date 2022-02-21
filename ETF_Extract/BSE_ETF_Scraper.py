@@ -64,6 +64,18 @@ if __name__ == '__main__':
 			rowdetails=[]
 #Write the extracted information into data frame
 		df = PD.DataFrame(rowdata,columns=columnname)
+#How to multiplie dataframe value with constant
+#Need to convert the data type of dataframe from object to float type
+#To perform the multiplication
+#Need to scavange 
+#https://stackoverflow.com/questions/12733184/why-does-multiplication-repeats-the-number-several-times
+#https://stackoverflow.com/questions/39173813/pandas-convert-dtype-object-to-int
+#https://stackoverflow.com/questions/43858595/how-do-i-fix-invalid-literal-for-int-with-base-10-error-in-pandas
+#This is done to make sure the visualization works
+
+		df['Turnover (Lacs)']=df['Turnover (Lacs)'].astype(float)
+		df['Turnover (Lacs)']=df['Turnover (Lacs)']*100000.00
+		df['Turnover (Lacs)']=df['Turnover (Lacs)'].astype(int)
 #Write the data into the xlsx file
 		df.to_csv(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/BSE_daily_data/'+str(dateInfo)+'.csv',index=False)
 #https://www.browserstack.com/guide/close-browser-in-selenium
