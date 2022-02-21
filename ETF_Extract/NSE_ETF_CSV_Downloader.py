@@ -11,7 +11,7 @@ import shutil
 from selenium.webdriver.common.by import By
 if __name__ == '__main__':
 	options = webdriver.ChromeOptions()
-	options.binary_location=r'/Applications/Google Chrome 2.app/Contents/MacOS/Google Chrome'
+	options.binary_location=r'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
 #undetected_chromedriver require a profile information
 #Sets to create profile in chrome
