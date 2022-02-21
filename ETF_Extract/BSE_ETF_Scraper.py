@@ -12,7 +12,7 @@ import datetime
 if __name__ == '__main__':
 	dateInfo =  datetime.date.today()
 	options = webdriver.ChromeOptions()
-	options.binary_location=r'/Applications/Google Chrome 2.app/Contents/MacOS/Google Chrome'
+	options.binary_location=r'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 #undetected_chromedriver require a profile information
 #Sets to create profile in chrome
 #https://stackoverflow.com/questions/50635087/how-to-open-a-chrome-profile-through-user-data-dir-argument-of-selenium
