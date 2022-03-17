@@ -34,6 +34,8 @@ if __name__ == '__main__':
 # https://pynative.com/python-move-files/		
 	
 		pattern = 'MW-ETF-'+(datetime.datetime.now()).strftime("%d-%b-%Y")+'.csv'
+#Download is taking time,to counter that		
+		time.sleep(10)
 		des=r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/NSE_daily_data'
 		src=r'/Users/amithkanatt/Downloads/'+pattern
 		print(src)
