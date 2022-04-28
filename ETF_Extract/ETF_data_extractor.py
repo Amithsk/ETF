@@ -31,7 +31,7 @@ if __name__ == '__main__':
 #Read the url file,using panda
 #Navigate to the location and read the data
 	loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETF_URLS/ETF_URL.xlsx'
-	df = PD.read_excel(loc,sheet_name = 'Batch1')
+	df = PD.read_excel(loc,sheet_name = 'Batch4')
 #Loop through the rows using "index",to extract the URL
 #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.index.html
 	for rwCount in  df.index:
@@ -64,8 +64,16 @@ if __name__ == '__main__':
 			print("\nExtracte values",NAV)
 			print("\n Extacted values AUM",AUM)
 			print("\nETF name",etfName)
+#To remove the text that's captured during the scraping 
+	extracted_value=extracted_value.replace('High','',regex=True)
+	extracted_value=extracted_value.replace('Low','',regex=True)
+	extracted_value=extracted_value.replace('Returns','',regex=True)
+	extracted_value=extracted_value.replace('Realtime NAV','',regex=True)
+	extracted_value=extracted_value.replace('AUM','',regex=True)
+	extracted_value=extracted_value.replace('Expense Ratio','',regex=True)
+
 #Write the data into the excel file
-	extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETFdetails'+monthinfo+'_1'+'.xlsx',index=False)
+	extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETFdetails'+monthinfo+'_4'+'.xlsx',index=False)
 #https://www.browserstack.com/guide/close-browser-in-selenium
 #Closing the browser
 	driver.close()
