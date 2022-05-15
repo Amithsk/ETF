@@ -31,7 +31,7 @@ if __name__ == '__main__':
 #Read the url file,using panda
 #Navigate to the location and read the data
 	loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETF_URLS/ETF_URL.xlsx'
-	df = PD.read_excel(loc,sheet_name = 'Batch4')
+	df = PD.read_excel(loc,sheet_name = 'Batch2')
 #Loop through the rows using "index",to extract the URL
 #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.index.html
 	for rwCount in  df.index:
@@ -46,12 +46,12 @@ if __name__ == '__main__':
 #Source:https://stackoverflow.com/questions/28022764/python-and-how-to-get-text-from-selenium-element-webelement-object
 
 			elements = driver.find_elements(By.XPATH,'//div[@class="jsx-3420801268"]')
-			NAV=elements[0].text
-			AUM = elements[1].text
-			Expense_Ratio=elements[2].text
-			Sctr_Expense_Ratio=elements[3].text
-			Tracking_Error=elements[4].text
-			Asset_Tracking_Error=elements[5].text
+			NAV=elements[3].text
+			AUM = elements[4].text
+			Expense_Ratio=elements[5].text
+			Sctr_Expense_Ratio=elements[6].text
+			Tracking_Error=elements[7].text
+			Asset_Tracking_Error=elements[8].text
 #Extract the etfname(it was tricky)
 #Need to add the get_attribute function to get the text information from th H1		
 #https://stackoverflow.com/questions/43429788/python-selenium-finds-h1-element-but-returns-empty-text-string
@@ -61,8 +61,10 @@ if __name__ == '__main__':
 #https://www.geeksforgeeks.org/how-to-create-an-empty-dataframe-and-append-rows-columns-to-it-in-pandas
 
 			extracted_value=extracted_value.append({'NAV':NAV,'AUM':AUM,'Expense_Ratio':Expense_Ratio,'Sctr_Expense_Ratio':Sctr_Expense_Ratio,'Tracking_Error':Tracking_Error,'Asset_Tracking_Error':Asset_Tracking_Error,'Sector':etf_sector,'ETFname':etfName,'ETFSymbol':etf_symbol,'URL':etf_url},ignore_index=True)
-			print("\nExtracte values",NAV)
+			print("\nExtracte value NAV",NAV)
 			print("\n Extacted values AUM",AUM)
+			print("\n Expense ratio",Expense_Ratio)
+			print("\nTracking Error",Tracking_Error)
 			print("\nETF name",etfName)
 #To remove the text that's captured during the scraping 
 	extracted_value=extracted_value.replace('High','',regex=True)
@@ -71,9 +73,12 @@ if __name__ == '__main__':
 	extracted_value=extracted_value.replace('Realtime NAV','',regex=True)
 	extracted_value=extracted_value.replace('AUM','',regex=True)
 	extracted_value=extracted_value.replace('Expense Ratio','',regex=True)
+	extracted_value=extracted_value.replace('Category Exp Ratio','',regex=True)
+	extracted_value=extracted_value.replace('Tracking Error','',regex=True)
+	extracted_value=extracted_value.replace('Category Tracking Err','',regex=True)
 
 #Write the data into the excel file
-	extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETFdetails'+monthinfo+'_4'+'.xlsx',index=False)
+	extracted_value.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETFdetails'+monthinfo+'_2'+'.xlsx',index=False)
 #https://www.browserstack.com/guide/close-browser-in-selenium
 #Closing the browser
 	driver.close()
