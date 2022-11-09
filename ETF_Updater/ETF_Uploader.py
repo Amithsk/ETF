@@ -32,20 +32,6 @@ def formatdata(etfAUM,etfExpenseRatio,etfTrackingError):
 
 	return etfAUM,etfExpenseRatio,etfTrackingError
 
-#To add the asset information to the DB
-def addAsset(connection_details,data_loc):
-	try:
-		print("Adding asset information")
-		insert_sql="INSERT INTO`etf_asset`(`asset_info`)values(%s)"
-		cursor=connection_details.cursor()
-		AssetDetails = PD.read_excel(data_loc,sheet_name = 'Asset')
-		for lpcnt in AssetDetails.index:
-			values =AssetDetails['Asset'][lpcnt]
-			cursor.execute(insert_sql,values)
-		cursor.close()
-		
-	except Exception as e:
-		raise e
 #To add the asset related information(TrackingError,ExpenseRatio) to the DB
 def addAssetdetails(connection_details,dataloc,monthinfo):
 	try:
@@ -67,46 +53,37 @@ def addAssetdetails(connection_details,dataloc,monthinfo):
 	except Exception as e:
 		raise e
 
-
-def addETF(connection_details,dataloc):
-	try:
-		print("Entering Add ETF usecase")
-		cursor=connection_details.cursor()
-		retrieve_sql = "SELECT `idetf_asset`FROM `etf_asset` WHERE `asset_info`=%s"
-		insert_sql="INSERT INTO`etf`(`etf_name`,`etf_asset_category`,`etf_symbol`)values(%s,%s,%s)"
-		ETFDetails=PD.read_excel(dataloc,sheet_name='Data')
-		for lpcnt in ETFDetails.index:
-			etfAsset=ETFDetails['Sector'][lpcnt]
-			etfName=ETFDetails['ETFname'][lpcnt]
-			etfSymbol=ETFDetails['ETFSymbol'][lpcnt]
-			cursor.execute(retrieve_sql,etfAsset)
-			etfAssetdb=cursor.fetchone()
-			values=(etfName,etfAssetdb[0],etfSymbol)
-			#print("The values are ",values)
-			cursor.execute(insert_sql,values)
-	except Exception as e:
-		raise e
-
 def addETFdetails(connection_details,dataloc,monthinfo):
 	try:
 		print("Entering Add ETF details usecase")
+		missingETF=PD.DataFrame(columns=list('EN'))
 		cursor=connection_details.cursor()
 		retrieve_sql="SELECT `idetf`FROM	`etf` WHERE`etf_symbol`=%s"
 		insert_sql="INSERT INTO `etf_details`(`idetf_details`,`etf_aum`,`etf_tracking_error`,`etf_expense_ratio`,`etf_month`,`etf_fundhouse_name`)values(%s,%s,%s,%s,%s,%s)"
-		ETFDetails=PD.read_excel(dataloc,sheet_name='Data')
+		ETFDetails=PD.read_excel(dataloc,sheet_name='MasterData')
 		for lpcnt in ETFDetails.index:
 			etfTrackingError =ETFDetails['Tracking_Error'][lpcnt]
 			etfExpenseRatio=ETFDetails['Expense_Ratio'][lpcnt]
 			etfAUM=ETFDetails['AUM'][lpcnt]
-			etfFundhouse=ETFDetails['ETF Fund house'][lpcnt]
+			etfFundhouse=ETFDetails['ETF_Fund_house'][lpcnt]
 			#To get the ETF id information,we can also use ETF name
 			etfSymbol =ETFDetails['ETFSymbol'][lpcnt]
+			etfName =ETFDetails['ETFName'][lpcnt]
 			etfAUM,etfExpenseRatio,etfTrackingError=formatdata(etfAUM,etfExpenseRatio,etfTrackingError)
 			cursor.execute(retrieve_sql,etfSymbol)
 			etfid_details=cursor.fetchone()
-			values=(etfid_details[0],etfAUM,etfTrackingError,etfExpenseRatio,monthinfo,etfFundhouse)
+			if etfid_details:
+				values=(etfid_details[0],etfAUM,etfTrackingError,etfExpenseRatio,monthinfo,etfFundhouse)
+			else:
+				missingETF.loc[len(missingETF)]= etfSymbol,etfName
+			#print("The values are ",values,etfSymbol)
+			#cursor.execute(insert_sql,values)
+#Write the missing ETF information into excel
+		missingETFDataFrame=PD.DataFrame(missingETF,columns=['ETFInfo'])
+		if not missingETFDataFrame.empty:
+			print("Are we coming into the missing ETF")
+			missingETF.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Error/'+'MissingETF'+monthinfo+'.xlsx')
 
-			cursor.execute(insert_sql,values)
 
 	except Exception as e:
 		raise e
@@ -136,11 +113,11 @@ def disconnect_db(connection_details):
 
 def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
-	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail_'+monthinfo+'_Combined.xlsx'
+#	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail_'+monthinfo+'_Combined.xlsx'
+	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETF_details/ETFConsoldatedData.xlsx'
+
 	connection_details=connect_db()
-	#addAsset(connection_details,data_loc)
 	#addAssetdetails(connection_details,data_loc,monthinfo)
-	#addETF(connection_details,data_loc)
 	addETFdetails(connection_details,data_loc,monthinfo)
 	disconnect_db(connection_details)
 
