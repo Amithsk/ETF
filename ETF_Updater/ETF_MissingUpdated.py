@@ -1,5 +1,4 @@
-#To upload the missing ETF & Asset information
-#Pending
+ #Pending
 #1.Make the code OOP ,currently method driven
 import pandas as PD
 import pymysql
@@ -37,6 +36,7 @@ def addAsset(connection_details,data_loc):
 	except Exception as e:
 		raise e
 def addETF(connection_details,dataloc,monthinfo):
+#The Column D(ETF_Fund_House),E(ETFSymbol),F(ETFName),G(Sector) values are  needed for the ETF addition
 	try:
 		print("Entering Add ETF usecase")
 		cursor=connection_details.cursor()
@@ -56,6 +56,7 @@ def addETF(connection_details,dataloc,monthinfo):
 				cursor.execute(insert_sql,values)
 			else:
 #If the Asset information is not prt,append Asset in into an list information & write into a file later
+#Using loc function to update the Dataframe
 				missingETF.loc[len(missingETF)]= etfAsset
 				#print("The values are ",etfAsset)
 #Write the missing ETF information into excel,so that Asset information can be updated
@@ -92,7 +93,7 @@ def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
 	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/MissingInfo/missingInfo.xlsx'
 	connection_details=connect_db()
-	addETF(connection_details,data_loc,monthinfo)
+	#addETF(connection_details,data_loc,monthinfo)
 	#addAsset(connection_details,data_loc)
 	disconnect_db(connection_details)
 

@@ -1,6 +1,11 @@
+#Objective
 #To upload the ETF data into the DB for reporting purpose
 #To upload the ETF's NAV,AUM,Tracking error,Expense ratio
 #To upload the Asset's Tracking error,Expense ratio
+#How the flow works
+#1/To add ETF & Asset details to the DB,will be using 'ETF_Uploader'
+#2/The missing ETF & Asset  details will be Update using 'ETF_MissingUpdated'
+#The file
 import pandas as PD
 import pymysql
 import datetime
@@ -76,8 +81,9 @@ def addETFdetails(connection_details,dataloc,monthinfo):
 				values=(etfid_details[0],etfAUM,etfTrackingError,etfExpenseRatio,monthinfo,etfFundhouse)
 			else:
 				missingETF.loc[len(missingETF)]= etfSymbol,etfName
-			#print("The values are ",values,etfSymbol)
-			#cursor.execute(insert_sql,values)
+				print("The values are ",values,etfSymbol)
+
+			cursor.execute(insert_sql,values)
 #Write the missing ETF information into excel
 		missingETFDataFrame=PD.DataFrame(missingETF,columns=['ETFInfo'])
 		if not missingETFDataFrame.empty:
