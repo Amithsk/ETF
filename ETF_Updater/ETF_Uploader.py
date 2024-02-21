@@ -44,7 +44,7 @@ def addAssetdetails(connection_details,dataloc,monthinfo):
 		insert_sql="INSERT INTO`etf_asset_details`(`asset_id`,`asset_trackingerror`,`asset_expenseratio`,`asset_month`)values(%s,%s,%s,%s)"
 		retrieve_sql ="SELECT `idetf_asset` FROM `etf_asset` WHERE `asset_info`=%s"
 		cursor=connection_details.cursor()
-		AssetDetails= PD.read_excel(dataloc,sheet_name = 'Data')
+		AssetDetails= PD.read_excel(dataloc,sheet_name = 'AssetData')
 		for lpcnt in AssetDetails.index:
 			assetCode = AssetDetails['Sector'][lpcnt]
 			assetTrackingError = AssetDetails['Asset_Tracking_Error'][lpcnt]
@@ -65,7 +65,7 @@ def addETFdetails(connection_details,dataloc,monthinfo):
 		cursor=connection_details.cursor()
 		retrieve_sql="SELECT `idetf`FROM	`etf` WHERE`etf_symbol`=%s"
 		insert_sql="INSERT INTO `etf_details`(`idetf_details`,`etf_aum`,`etf_tracking_error`,`etf_expense_ratio`,`etf_month`,`etf_fundhouse_name`)values(%s,%s,%s,%s,%s,%s)"
-		ETFDetails=PD.read_excel(dataloc,sheet_name='MasterData')
+		ETFDetails=PD.read_excel(dataloc,sheet_name='ETFData')
 		for lpcnt in ETFDetails.index:
 			etfTrackingError =ETFDetails['Tracking_Error'][lpcnt]
 			etfExpenseRatio=ETFDetails['Expense_Ratio'][lpcnt]
