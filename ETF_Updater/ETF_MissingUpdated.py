@@ -1,14 +1,12 @@
- #Pending
+#To add the base information of ETF and Asset information
+#Post update,ETF_Uploaded.py will be used to add additional details of the ETF
+#Pending
 #1.Make the code OOP ,currently method driven
 import pandas as PD
 import pymysql
 import datetime
 import re
-
-#To debug the missing ETF  
-missingETF=[]  
-
-#To add the asset information to the DB
+ #To add the asset information to the DB
 def addAsset(connection_details,data_loc):
 	try:
 		print("Adding asset information")
@@ -36,10 +34,12 @@ def addAsset(connection_details,data_loc):
 	except Exception as e:
 		raise e
 def addETF(connection_details,dataloc,monthinfo):
-#The Column D(ETF_Fund_House),E(ETFSymbol),F(ETFName),G(Sector) values are  needed for the ETF addition
+#The 
 	try:
 		print("Entering Add ETF usecase")
 		cursor=connection_details.cursor()
+		#To debug the missing ETF  
+		missingETF=PD.DataFrame(columns=['AssetInfo'])
 #To retrieve the asset the information from the DB
 		retrieve_sql = "SELECT `idetf_asset`FROM `etf_asset` WHERE `asset_info`=%s"
 		insert_sql="INSERT INTO`etf`(`etf_name`,`etf_asset_category`,`etf_symbol`)values(%s,%s,%s)"
@@ -53,14 +53,18 @@ def addETF(connection_details,dataloc,monthinfo):
 #If the Asset information is present,write that information to the DB
 			if etfAssetdb:
 				values=(etfName,etfAssetdb[0],etfSymbol)
-				cursor.execute(insert_sql,values)
+				#cursor.execute(insert_sql,values)
 			else:
-#If the Asset information is not prt,append Asset in into an list information & write into a file later
+#If the Asset information is not present,append Asset in into an list information & write into a file later
 #Using loc function to update the Dataframe
+				print("The values are ",etfAsset)
 				missingETF.loc[len(missingETF)]= etfAsset
-				#print("The values are ",etfAsset)
+				
+				
 #Write the missing ETF information into excel,so that Asset information can be updated
+		#
 		missingETFDataFrame=PD.DataFrame(missingETF,columns=['AssetInfo'])
+		#print("The missing value",missingETFDataFrame)
 		if not missingETFDataFrame.empty:
 			missingETFDataFrame.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Error/'+'MissingAsset_'+monthinfo+'.xlsx')
 
@@ -93,7 +97,7 @@ def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
 	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/MissingInfo/missingInfo.xlsx'
 	connection_details=connect_db()
-	#addETF(connection_details,data_loc,monthinfo)
+	addETF(connection_details,data_loc,monthinfo)
 	#addAsset(connection_details,data_loc)
 	disconnect_db(connection_details)
 
