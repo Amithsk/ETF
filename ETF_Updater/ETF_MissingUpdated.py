@@ -25,8 +25,8 @@ def addAsset(connection_details,data_loc):
 				print("The value already present",etfAsset[0])
 			else:
 #If the value don't exist,add the values
-				#cursor.execute(insert_sql,values)
-				print("The values are",values)
+				#cursor.execute(insert_sql,upper(values))
+				print("The values are",values.upper())
 #Will not write into the execl,as Asset missing information is identified during the ETF update process
 		cursor.close()
 
@@ -97,8 +97,8 @@ def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
 	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/MissingInfo/missingInfo.xlsx'
 	connection_details=connect_db()
-	addETF(connection_details,data_loc,monthinfo)
-	#addAsset(connection_details,data_loc)
+	#addETF(connection_details,data_loc,monthinfo)
+	addAsset(connection_details,data_loc)
 	disconnect_db(connection_details)
 
 main()
