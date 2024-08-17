@@ -36,7 +36,7 @@ def extract_etf_data(input_file, output_file):
                 etf_data.append([current_date, etf_name.strip(), nav.strip()])
 
     # Write the extracted ETF data to a CSV file
-    with open(output_file, 'w', newline='') as csvfile:
+    with open(output_file, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Date', 'ETF Name', 'NAV'])  # Write the header
         writer.writerows(etf_data)  # Write the ETF data rows
