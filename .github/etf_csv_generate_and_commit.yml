@@ -26,12 +26,12 @@ jobs:
     - name: Run ETF CSV generation script
       run: |
         python ETF_Extract/NSE_ETF_Daily_Downloader.py  # Trigger the python file
-        mv ETF_data_*.csv Download/
+        mv ETF_data_*.csv Download/               #move the file to download folder in the repo
 
     - name: Commit CSV file
       run: |
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
-        git add ETF_data_*.csv
+        git add Download/ETF_data_*.csv   #Add to the csv to Download folder
         git commit -m "Automated ETF CSV upload on daily basis"
         git push
