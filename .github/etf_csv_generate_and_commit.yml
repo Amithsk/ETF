@@ -1,0 +1,37 @@
+name: Generate and Commit ETF CSV
+
+on:
+  schedule:
+    - cron: '30 12 * * *'  # Runs daily at 12:30 PM UTC (6:00 PM IST)
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  generate_csv:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Run ETF CSV generation script
+      run: |
+        python ETF_Extract/NSE_ETF_Daily_Downloader.py  # Trigger the python file
+        mv ETF_data_*.csv Download/
+
+    - name: Commit CSV file
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git add ETF_data_*.csv
+        git commit -m "Automated ETF CSV upload on daily basis"
+        git push
