@@ -1,76 +1,117 @@
-from numpy import empty
-import pandas as PD
+import os
+import subprocess
 import pymysql
-import datetime
-if __name__ == '__main__':
-#To debug the missing ETF  
-    missingETF=[]    
+import pandas as pd
 
-#Read the data file
-    dateInfo=((datetime.date.today()).strftime("%d-%b-%Y"))
-    #dateInfo=''
+# GitHub repository details
+REPO_PATH = '/Volumes/Project/ETFAnalyser/ETF'  # Local path to your repository
+FILES_DIR = '/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Download'  # Directory where the files are located inside the repo (if applicable)
 
-    #finalloc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/NSE_daily_data/'+'MW-ETF-'+dateInfo+'.csv'
-    finalloc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/NSE_daily_data/Feb_24/MW-ETF-01-Feb-2024.csv'
-    dataDetails=PD.read_csv(finalloc)
-    index='NSE'
+# DB connection setup
+def connect_db():
+    connection = pymysql.connect(host='localhost', user='root', password='', db='ETF')
+    return connection
 
-    
-#DB connection setup
-    connection = pymysql.connect(host='localhost',user='root',password='',db='ETF')
+# SQL Queries
+retrieveetf_sql = "SELECT `idetf` FROM `etf` WHERE `etf_symbol` = %s"
+insert_sql = """
+    INSERT INTO `etf_daily_transaction`(
+        `etf_id`, `etf_daily_traded_volume`, `etf_daily_traded_value`, `etf_last_traded_price`,
+        `etf_prevclose_price`, `etf_trade_date`, `etf_traded_high`, `etf_traded_low`, 
+        `etf_day_open`, `etf_daily_nooftrade`, `etf_52wh`, `etf_52wl`, 
+        `etf_daily_deliverableqty`, `etf_daily_deliverablepercentageqty`
+    )
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+"""
+
+# Step 1: Pull latest changes from GitHub
+def pull_latest_changes():
+    os.chdir(REPO_PATH)
+    subprocess.run(['git', 'pull'], check=True)
+    print("Pulled latest changes from GitHub")
+
+# Step 2: Process the CSV file and update the database
+def process_csv_file(file_path):
+    connection = connect_db()
     cursor = connection.cursor()
-    retrieveetf_sql="SELECT `idetf` FROM `etf` where `etf_symbol` = %s"
-    insert_sql="INSERT `etf_daily_transaction`(`etf_id`,`etf_daily_traded_volume`,`etf_daily_traded_value`,`etf_last_traded_price`,`etf_prevclose_price`,`etf_trade_date`,`etf_index`,`etf_traded_high`,`etf_traded_low`,`etf_changepercentage`)values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     
-    #Get the data from the file
+    # Load the CSV file
+    dataDetails = pd.read_csv(file_path)
+    
+    missingETF = []
+    
+    # Iterate over each row in the CSV
     for rwCnt in dataDetails.index:
-#Iterate the rows in 'csv' is bit different 
-#In the case of 'xls',[] would work but in the case of 'csv' we need to use 'iloc' to iterate through rows
-        etfsymboldetail=dataDetails.iloc[rwCnt,0]
-        etfHigh=dataDetails.iloc[rwCnt,3]
-        etfLow=dataDetails.iloc[rwCnt,4]
-        etfprevclose=dataDetails.iloc[rwCnt,5]
-        etfLTP=dataDetails.iloc[rwCnt,6]
-        etfChangePercentage=str(dataDetails.iloc[rwCnt,8])
-        etfVolume=dataDetails.iloc[rwCnt,9]
-        etfValue=dataDetails.iloc[rwCnt,10]
-#To replace the '-' symbol with '0' so that calculation can be performed
-#Need to replace this method with better one
-        if etfHigh == '-':
-            etfHigh=0
-        if etfLow == '-':
-            etfLow=0
-        if etfprevclose == '-':
-            etfprevclose=0
-        if etfLTP =='-':
-            etfLTP=0
-        if etfChangePercentage =='-':
-            etfChangePercentage=0
-        if etfVolume == '-':
-            etfVolume =0
-        if etfValue == '-':
-            etfValue=0
+        etfTradeDate = dataDetails.iloc[rwCnt, 0]
+        etfNav = dataDetails.iloc[rwCnt, 2]
+        etfDateOpen = dataDetails.iloc[rwCnt, 3]
+        etfHigh = dataDetails.iloc[rwCnt, 4]
+        etfLow = dataDetails.iloc[rwCnt, 5]
+        etfLTP = dataDetails.iloc[rwCnt, 6]
+        etfPrevclose = dataDetails.iloc[rwCnt, 7]
+        etfVwap = dataDetails.iloc[rwCnt, 8]
+        etf52WH = dataDetails.iloc[rwCnt, 9]
+        etf52WL = dataDetails.iloc[rwCnt, 10]
+        etfVolume = dataDetails.iloc[rwCnt, 11]
+        etfValue = dataDetails.iloc[rwCnt, 12]
+        etfDayTrade = dataDetails.iloc[rwCnt, 13]
+        etfsymboldetail = dataDetails.iloc[rwCnt, 14]
+        etfDeliverableQty = dataDetails.iloc[rwCnt, 15]
+        etfDeliverableQtyPercentage = dataDetails.iloc[rwCnt, 16]
         
-#Retrieve the ETF details from the DB,based on the Symbol information
-        cursor.execute(retrieveetf_sql,etfsymboldetail)
-        etfInfo=cursor.fetchone()
-#checking if the ETF informaton is present in the DB
-        if (etfInfo):
-            etfID=etfInfo[0]
-            Values=(etfID,etfVolume,etfValue,etfLTP,etfprevclose,dateInfo,index,etfHigh,etfLow,etfChangePercentage)
-            print("The values of ETF",Values)
-            #cursor.execute(insert_sql,Values)
+        # Retrieve ETF details from the database
+        cursor.execute(retrieveetf_sql, etfsymboldetail)
+        etfInfo = cursor.fetchone()
+        
+        if etfInfo:
+            etfID = etfInfo[0]
+            Values = (
+                etfID, etfVolume, etfValue, etfLTP, etfPrevclose, etfTradeDate, etfHigh, etfLow, 
+                etfDateOpen, etfDayTrade, etf52WH, etf52WL, etfDeliverableQty, etfDeliverableQtyPercentage
+            )
+            print("Inserting values into ETF daily transaction:", Values)
+            cursor.execute(insert_sql, Values)
         else:
-            print("Am i called here")
+            print(f"ETF symbol '{etfsymboldetail}' not found in the database.")
             missingETF.append(etfsymboldetail)
-    cursor.close()
-#Write the missing ETF information to excel
-    missingETFDataFrame=PD.DataFrame(missingETF,columns=['ETF_Name'])
-    if not missingETFDataFrame.empty:
-        missingETFDataFrame.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Error/'+dateInfo+'.xlsx')
-
     
-    #Generate the Date information dynamically 
-#Disconnect the connection
+    # Write missing ETF symbols to an Excel file
+    if missingETF:
+        dateInfo = (pd.Timestamp.today()).strftime("%d-%b-%Y")
+        missingETFDataFrame = pd.DataFrame(missingETF, columns=['ETF_Name'])
+        error_file_path = os.path.join('/path_to_error_folder/', f'{dateInfo}_missing_etfs.xlsx')
+        missingETFDataFrame.to_excel(error_file_path, index=False)
+        print(f"Missing ETF data written to {error_file_path}")
+    
     connection.commit()
+    cursor.close()
     connection.close()
+
+# Step 3: Delete the file locally and in GitHub
+def delete_file(file_name):
+    # Delete locally
+    file_path = os.path.join(REPO_PATH, FILES_DIR, file_name)
+    os.remove(file_path)
+    print(f"Deleted local file: {file_name}")
+    
+    # Stage and push changes to GitHub
+    subprocess.run(['git', 'add', file_path], check=True)
+    subprocess.run(['git', 'commit', '-m', f"Deleted {file_name} after processing"], check=True)
+    subprocess.run(['git', 'push'], check=True)
+    print(f"Pushed file deletion to GitHub: {file_name}")
+
+# Step 4: Process files in the repository
+def process_files():
+    pull_latest_changes()
+    os.chdir(os.path.join(REPO_PATH, FILES_DIR))
+    
+    #for file_name in os.listdir('.'):
+        #if file_name.endswith('.csv'):
+            # Process CSV file
+            #process_csv_file(file_name)
+            
+            # Delete file after processing
+            #delete_file(file_name)
+
+if __name__ == '__main__':
+    process_files()
