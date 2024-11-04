@@ -15,7 +15,7 @@ def addAsset(connection_details,data_loc):
 		cursor=connection_details.cursor()
 		AssetDetails = PD.read_excel(data_loc,sheet_name = 'Asset')
 		for lpcnt in AssetDetails.index:
-			values =AssetDetails['Asset'][lpcnt]
+			values =AssetDetails['Asset'][lpcnt].strip().upper()
 #To check if the value already exist in the DB
 			cursor.execute(retrieve_sql,values)
 			etfAsset=cursor.fetchone()
@@ -26,8 +26,8 @@ def addAsset(connection_details,data_loc):
 			else:
 #If the value don't exist,add the values
 #Add the upper operator to ensure the duplicate values are not added 
-				#cursor.execute(insert_sql,upper(values))
-				print("The values are",values.upper())
+				cursor.execute(insert_sql,values)
+				print("The  added values are",values)
 #Will not write into the execl,as Asset missing information is identified during the ETF update process
 		cursor.close()
 
@@ -42,30 +42,36 @@ def addETF(connection_details,dataloc,monthinfo):
 		#To debug the missing ETF  
 		missingETF=PD.DataFrame(columns=['AssetInfo'])
 #To retrieve the asset the information from the DB
-		retrieve_sql = "SELECT `idetf_asset`FROM `etf_asset` WHERE `asset_info`=%s"
+		retrieve_etf_asset_sql = "SELECT `idetf_asset`FROM `etf_asset` WHERE `asset_info`=%s"
+		retrieve_etf_symbol_sql = "SELECT `etf_symbol`FROM `etf` WHERE `etf_symbol`=%s"
 		insert_sql="INSERT INTO`etf`(`etf_name`,`etf_asset_category`,`etf_symbol`)values(%s,%s,%s)"
 		ETFDetails=PD.read_excel(dataloc,sheet_name= 'ETF')
 		for lpcnt in ETFDetails.index:
-			etfAsset=ETFDetails['Sector'][lpcnt]
+			etfAsset=ETFDetails['Asset'][lpcnt].strip().upper()
 			etfName=ETFDetails['ETFname'][lpcnt]
 			etfSymbol=ETFDetails['ETFSymbol'][lpcnt]
-			cursor.execute(retrieve_sql,etfAsset)
+#To retrieve the etf asset information from db
+			cursor.execute(retrieve_etf_asset_sql,etfAsset)
 			etfAssetdb=cursor.fetchone()
-#If the Asset information is present,write that information to the DB
+#To retrieve the etf symbol information from db
+			cursor.execute(retrieve_etf_symbol_sql,etfSymbol)
+			etfSymboldb=cursor.fetchone()
+#If the Asset information is present & etfSymbol is not present,write that information to the DB & prevent same ETF being added
 			if etfAssetdb:
-				values=(etfName,etfAssetdb[0],etfSymbol)
-				#cursor.execute(insert_sql,values)
+				if not(etfSymboldb):
+					values=(etfName,etfAssetdb[0],etfSymbol)
+					cursor.execute(insert_sql,values)
 			else:
 #If the Asset information is not present,append Asset in into an list information & write into a file later
 #Using loc function to update the Dataframe
-				print("The values are ",etfAsset)
+				print("The duplicate values are ",etfAsset,etfSymbol)
 				missingETF.loc[len(missingETF)]= etfAsset
 				
 				
 #Write the missing ETF information into excel,so that Asset information can be updated
 		#
 		missingETFDataFrame=PD.DataFrame(missingETF,columns=['AssetInfo'])
-		#print("The missing value",missingETFDataFrame)
+		print("The missing value",missingETFDataFrame)
 		if not missingETFDataFrame.empty:
 			missingETFDataFrame.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Error/'+'MissingAsset_'+monthinfo+'.xlsx')
 
@@ -98,8 +104,8 @@ def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
 	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/MissingInfo/missingInfo.xlsx'
 	connection_details=connect_db()
-	addETF(connection_details,data_loc,monthinfo)
-	#addAsset(connection_details,data_loc)
+	#addETF(connection_details,data_loc,monthinfo)
+	addAsset(connection_details,data_loc)
 	disconnect_db(connection_details)
 
 main()
