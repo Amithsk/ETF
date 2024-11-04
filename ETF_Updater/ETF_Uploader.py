@@ -4,8 +4,9 @@
 #To upload the Asset's Tracking error,Expense ratio
 #How the flow works
 #1/To add ETF & Asset details to the DB,will be using 'ETF_Uploader'
-#2/The missing ETF & Asset  details will be Update using 'ETF_MissingUpdated'
-#The file
+#2/If any data is missing,use ETF_MissingUpdated.py to add data to DB
+#Pending
+#When creating the excel,the header must be added
 import pandas as PD
 import pymysql
 import datetime
@@ -61,7 +62,8 @@ def addAssetdetails(connection_details,dataloc,monthinfo):
 def addETFdetails(connection_details,dataloc,monthinfo):
 	try:
 		print("Entering Add ETF details usecase")
-		missingETF=PD.DataFrame(columns=list('EN'))
+		# create a  dataframe with columns,pass either a dictionary or list of lists/tuples as the data parameter
+		missingETF=PD.DataFrame(columns=['ETFname','ETFSymbol'])
 		cursor=connection_details.cursor()
 		retrieve_sql="SELECT `idetf`FROM	`etf` WHERE`etf_symbol`=%s"
 		insert_sql="INSERT INTO `etf_details`(`idetf_details`,`etf_aum`,`etf_tracking_error`,`etf_expense_ratio`,`etf_month`,`etf_fundhouse_name`)values(%s,%s,%s,%s,%s,%s)"
@@ -81,11 +83,11 @@ def addETFdetails(connection_details,dataloc,monthinfo):
 				values=(etfid_details[0],etfAUM,etfTrackingError,etfExpenseRatio,monthinfo,etfFundhouse)
 			else:
 				missingETF.loc[len(missingETF)]= etfSymbol,etfName
-				print("The values are ",values,etfSymbol)
+				print("The values are ",etfSymbol,etfName)
 
-			cursor.execute(insert_sql,values)
+			#cursor.execute(insert_sql,values)
 #Write the missing ETF information into excel
-		missingETFDataFrame=PD.DataFrame(missingETF,columns=['ETFInfo'])
+		missingETFDataFrame=PD.DataFrame(missingETF,columns=['ETFname','ETFSymbol'])
 		if not missingETFDataFrame.empty:
 			print("Are we coming into the missing ETF")
 			missingETF.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Error/'+'MissingETF'+monthinfo+'.xlsx')
@@ -107,15 +109,15 @@ def connect_db():
 		print(whaterror)
 
 def disconnect_db(connection_details):
-	try:
-		connection_details.commit()
-		connection_details.close()
-		if connection_details.open:
-			print("Something went wrong")
-		else:
-			print("Everything is success")
-	except Exception as whaterror:
-		print(whaterror)
+    try:
+        connection_details.commit()
+        connection_details.close()
+        if connection_details.open:
+            print("Database connection close failed")
+        else:
+            print("Database connection closed successfully")
+    except Exception as e:
+        print(f"Error closing the connection: {e}")
 
 def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
