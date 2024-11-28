@@ -105,7 +105,7 @@ def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
 	data_loc='/Volumes/Project/ETFAnalyser/ETF_Data/ETF_Fund_Details/MissingInfo/missingInfo.xlsx'
 	connection_details=connect_db()
-	addETF(connection_details,data_loc,monthinfo)
+	#addETF(connection_details,data_loc,monthinfo)
 	#addAsset(connection_details,data_loc)
 	disconnect_db(connection_details)
 
