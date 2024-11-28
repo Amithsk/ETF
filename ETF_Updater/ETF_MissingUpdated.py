@@ -53,27 +53,28 @@ def addETF(connection_details,dataloc,monthinfo):
 #To retrieve the etf asset information from db
 			cursor.execute(retrieve_etf_asset_sql,etfAsset)
 			etfAssetdb=cursor.fetchone()
-#To retrieve the etf symbol information from db
+#To retrieve the etf symbol id information from db
 			cursor.execute(retrieve_etf_symbol_sql,etfSymbol)
 			etfSymboldb=cursor.fetchone()
-#If the Asset information is present & etfSymbol is not present,write that information to the DB & prevent same ETF being added
+#If the Asset information is present  in the db
 			if etfAssetdb:
+#etfSymbol is not present,write that information to the DB & prevent duplicate ETF being added
 				if not(etfSymboldb):
 					values=(etfName,etfAssetdb[0],etfSymbol)
-					cursor.execute(insert_sql,values)
-			else:
+					#cursor.execute(insert_sql,values)
+				else:
+					print("The duplicate values are ",etfAsset,etfSymbol)
 #If the Asset information is not present,append Asset in into an list information & write into a file later
 #Using loc function to update the Dataframe
-				print("The duplicate values are ",etfAsset,etfSymbol)
+			else:
 				missingETF.loc[len(missingETF)]= etfAsset
 				
-				
+		
 #Write the missing ETF information into excel,so that Asset information can be updated
-		#
-		missingETFDataFrame=PD.DataFrame(missingETF,columns=['AssetInfo'])
-		print("The missing value",missingETFDataFrame)
+		missingETFDataFrame=PD.DataFrame(missingETF,columns=['AssetInfo'])		
 		if not missingETFDataFrame.empty:
-			missingETFDataFrame.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Error/'+'MissingAsset_'+monthinfo+'.xlsx')
+			print("The missing value",missingETFDataFrame)
+			missingETFDataFrame.to_excel(r'/Volumes/Project/ETFAnalyser/ETF_Data/Error/'+'MissingAsset_'+monthinfo+'.xlsx')
 
 
 	except Exception as e:
@@ -102,10 +103,10 @@ def disconnect_db(connection_details):
 
 def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
-	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/MissingInfo/missingInfo.xlsx'
+	data_loc='/Volumes/Project/ETFAnalyser/ETF_Data/ETF_Fund_Details/MissingInfo/missingInfo.xlsx'
 	connection_details=connect_db()
-	#addETF(connection_details,data_loc,monthinfo)
-	addAsset(connection_details,data_loc)
+	addETF(connection_details,data_loc,monthinfo)
+	#addAsset(connection_details,data_loc)
 	disconnect_db(connection_details)
 
 main()
