@@ -11,6 +11,7 @@ import pandas as PD
 import pymysql
 import datetime
 import re
+import os
 #Facing problem with etfExpesnseRatio,etfTracking values after division
 #'0.0014000000000000002' huge numbers were returned,to avoid that Decimal was used
 #https://stackoverflow.com/questions/455612/limiting-floats-to-two-decimal-points
@@ -66,7 +67,7 @@ def addETFdetails(connection_details,dataloc,monthinfo):
 		missingETF=PD.DataFrame(columns=['ETFname','ETFSymbol'])
 		cursor=connection_details.cursor()
 		retrieve_sql="SELECT `idetf`FROM	`etf` WHERE`etf_symbol`=%s"
-		insert_sql="INSERT INTO `etf_details`(`idetf_details`,`etf_aum`,`etf_tracking_error`,`etf_expense_ratio`,`etf_month`,`etf_fundhouse_name`)values(%s,%s,%s,%s,%s,%s)"
+		insert_sql="INSERT INTO `etf_details`(`idetf_details`,`etf_name`,`etf_aum`,`etf_tracking_error`,`etf_expense_ratio`,`etf_month`,`etf_fundhouse_name`)values(%s,%s,%s,%s,%s,%s,%s)"
 		ETFDetails=PD.read_excel(dataloc,sheet_name='ETFData')
 		for lpcnt in ETFDetails.index:
 			etfTrackingError =ETFDetails['Tracking_Error'][lpcnt]
@@ -80,7 +81,7 @@ def addETFdetails(connection_details,dataloc,monthinfo):
 			cursor.execute(retrieve_sql,etfSymbol)
 			etfid_details=cursor.fetchone()
 			if etfid_details:
-				values=(etfid_details[0],etfAUM,etfTrackingError,etfExpenseRatio,monthinfo,etfFundhouse)
+				values=(etfid_details[0],etfName,etfAUM,etfTrackingError,etfExpenseRatio,monthinfo,etfFundhouse)
 			else:
 				missingETF.loc[len(missingETF)]= etfSymbol,etfName
 				print("The values are ",etfSymbol,etfName)
@@ -90,7 +91,9 @@ def addETFdetails(connection_details,dataloc,monthinfo):
 		missingETFDataFrame=PD.DataFrame(missingETF,columns=['ETFname','ETFSymbol'])
 		if not missingETFDataFrame.empty:
 			print("Are we coming into the missing ETF")
-			missingETF.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Error/'+'MissingETF'+monthinfo+'.xlsx')
+			file_name ="MissingAsset_"+monthinfo+".xlsx"	
+			file_path =os.path.join(r"D:\ETF_Data\ETF_Error\\", file_name)	
+			missingETF.to_excel(file_path, index=False)
 
 
 	except Exception as e:
@@ -121,12 +124,10 @@ def disconnect_db(connection_details):
 
 def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
-#	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETFdetail_'+monthinfo+'_Combined.xlsx'
-	data_loc='/Volumes/Project/ETFAnalyser/ETF/ETF_Data/ETF_fund_details/ETF_details/ETFConsoldatedData.xlsx'
-
+	data_loc='D:\ETF_Data\ETF_Fund_Details\ETF_details\ETFConsoldatedData.xlsx'
 	connection_details=connect_db()
 	#addAssetdetails(connection_details,data_loc,monthinfo)
-	addETFdetails(connection_details,data_loc,monthinfo)
+	#addETFdetails(connection_details,data_loc,monthinfo)
 	disconnect_db(connection_details)
 
 main()
