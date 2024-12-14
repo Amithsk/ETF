@@ -27,7 +27,7 @@ def addAsset(connection_details,data_loc):
 			else:
 #If the value don't exist,add the values
 
-				cursor.execute(insert_sql,values)
+				#cursor.execute(insert_sql,values)
 				print("The  added values are",values)
 #Will not write into the execl,as Asset missing information is identified during the ETF update process
 		cursor.close()
@@ -85,7 +85,8 @@ def addETF(connection_details,dataloc,monthinfo):
 		raise e
 def connect_db():
 	try:
-		connection = pymysql.connect(host='localhost',user='root',password='',db='ETF')
+		password = os.getenv('MYSQL_PASSWORD')
+		connection = pymysql.connect(host='localhost',user='root',password=password,db='etf')
 		#To check if the connection is successful
 		#Source:https://stackoverflow.com/questions/45800460/how-to-use-mysqldb-is-connected-to-check-an-active-mysql-connection-using-pyth
 		if connection.open:
@@ -107,10 +108,10 @@ def disconnect_db(connection_details):
 
 def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
-	data_loc='D:\ETF_Data\ETF_Fund_Details\MissingInfo\missingInfo.xlsx'
+	data_loc=r"D:\ETF_Data\ETF_Fund_Details\MissingInfo\missingInfo.xlsx"
 	connection_details=connect_db()
 	#addETF(connection_details,data_loc,monthinfo)
-	#addAsset(connection_details,data_loc)
+	addAsset(connection_details,data_loc)
 	disconnect_db(connection_details)
 
 main()
