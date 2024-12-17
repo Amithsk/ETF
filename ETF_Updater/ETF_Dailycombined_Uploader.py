@@ -64,7 +64,9 @@ if __name__ == '__main__':
     dateInfo=((datetime.date.today()).strftime("%d-%b-%Y"))
     missingETFDataFrame=PD.DataFrame(missingETF,columns=['ETF_Name'])
     if not missingETFDataFrame.empty:
-        missingETFDataFrame.to_excel(r'/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Error/'+dateInfo+'.xlsx')
+        file_name ="MissingAsset_"+dateInfo+".xlsx"	
+        file_path =os.path.join(r"D:\ETF_Data\ETF_Error\\", file_name)	
+        missingETFDataFrame.to_excel(file_path, index=False)
 
     
     #Generate the Date information dynamically 

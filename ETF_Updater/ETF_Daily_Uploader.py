@@ -79,9 +79,10 @@ def process_csv_file(file_path, etf_trade_date):
         dateInfo = (pd.Timestamp.today()).strftime("%d-%b-%Y")
         missingETFcolumns = ['ETF_Symbol', 'Volume', 'Value', 'Last_Trade_Price', 'Previous_Close', 'Trade_Date','Day_High', 'Day_Low', 'Open_Price', 'Day_Trades', '52_Week_High', '52_Week_Low', 'Deliverable_Quantity', 'Deliverable_Quantity_Percentage']
         missingETFDataFrame = pd.DataFrame(missingETF, columns=missingETFcolumns)
-        error_file_path = os.path.join('/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Error/', f'{dateInfo}_missing_etfs.xlsx')
-        missingETFDataFrame.to_excel(error_file_path, index=False)
-        print(f"Missing ETF data written to {error_file_path}")
+        file_name ="MissingAsset_"+dateInfo+".xlsx"	
+        file_path =os.path.join(r"D:\ETF_Data\ETF_Error\\", file_name)	
+        missingETFDataFrame.to_excel(file_path, index=False)
+        print(f"Missing ETF data written to {file_path}")
 
     connection.commit()
     cursor.close()

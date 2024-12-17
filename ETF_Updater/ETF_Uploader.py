@@ -102,6 +102,7 @@ def addETFdetails(connection_details,dataloc,monthinfo):
 
 def connect_db():
 	try:
+		password = os.getenv('MYSQL_PASSWORD')
 		connection = pymysql.connect(host='localhost',user='root',password='',db='ETF')
 		#To check if the connection is successful
 		#Source:https://stackoverflow.com/questions/45800460/how-to-use-mysqldb-is-connected-to-check-an-active-mysql-connection-using-pyth
