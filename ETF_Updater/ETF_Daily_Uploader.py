@@ -10,6 +10,7 @@ FILES_DIR = '/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Download'  # Directory wh
 
 # DB connection setup
 def connect_db():
+    password = os.getenv('MYSQL_PASSWORD')
     connection = pymysql.connect(host='localhost', user='root', password='', db='ETF')
     return connection
 
