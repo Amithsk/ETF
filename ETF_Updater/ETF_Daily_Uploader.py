@@ -5,18 +5,18 @@ import pandas as pd
 from datetime import datetime
 
 # GitHub repository details
-REPO_PATH = '/Volumes/Project/ETFAnalyser/ETF'  # Local path to your repository
-FILES_DIR = '/Volumes/Project/ETFAnalyser/ETF/ETF_Data/Download'  # Directory where the files are located inside the repo 
+REPO_PATH = r'D:\ETF'  # Local path to your repository
+FILES_DIR = r'D:\ETF\ETF_Data\Download'  # Directory where the files are located inside the repo 
 
 # DB connection setup
 def connect_db():
     password = os.getenv('MYSQL_PASSWORD')
-    connection = pymysql.connect(host='localhost', user='root', password='', db='ETF')
+    connection = pymysql.connect(host='localhost',user='root',password=password,db='etf')
     return connection
 
 # SQL Queries
 retrieveetf_sql = "SELECT `idetf` FROM `etf` WHERE `etf_symbol` = %s"
-insert_sql="INSERT `etf_daily_transaction`(`etf_id`,`etf_daily_traded_volume`,`etf_daily_traded_value`,`etf_last_traded_price`,`etf_prevclose_price`,`etf_trade_date`,`etf_traded_high`,`etf_traded_low`,`etf_day_open`,`etf_daily_nooftrade`,`etf_52wh`,`etf_52wl`,`etf_daily_deliverableqty`,`etf_daily_deliverablepercentageqty`)values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+insert_sql="INSERT `etf_daily_transaction`(`etf_id`,`etf_daily_traded_volume`,`etf_daily_traded_value`,`etf_last_traded_price`,`etf_prevclose_price`,`etf_trade_date`,`etf_traded_high`,`etf_traded_low`,`etf_day_open`,`etf_daily_nooftrade`,`etf_52wh`,`etf_52wl`,`etf_nav`,`etf_daily_deliverableqty`,`etf_daily_deliverablepercentageqty`)values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 # Step 1: Pull latest changes from GitHub
 def pull_latest_changes():
@@ -64,7 +64,7 @@ def process_csv_file(file_path, etf_trade_date):
                 etfLTP,etfPrevclose,
                 etf_trade_date,etfHigh,etfLow,etfDateOpen,
                 etfDayTrade,
-                etf52WH,etf52WL,
+                etf52WH,etf52WL,etfNav,
                 etfDeliverableQty,
                 etfDeliverableQtyPercentage
             )
@@ -72,13 +72,13 @@ def process_csv_file(file_path, etf_trade_date):
             #cursor.execute(insert_sql, Values)
         else:
             print(f"ETF symbol '{etfsymboldetail}' not found in the database.")
-            missingETFdetails=[etfsymboldetail,etfVolume,etfValue,etfLTP,etfPrevclose,etf_trade_date,etfHigh,etfLow,etfDateOpen,etfDayTrade,etf52WH,etf52WL,etfDeliverableQty,etfDeliverableQtyPercentage]
+            missingETFdetails=[etfsymboldetail,etfVolume,etfValue,etfLTP,etfPrevclose,etf_trade_date,etfHigh,etfLow,etfDateOpen,etfDayTrade,etf52WH,etf52WL,etfNav,etfDeliverableQty,etfDeliverableQtyPercentage]
             missingETF.append(missingETFdetails)
 
     # Write missing ETF symbols to an Excel file
     if missingETF:
         dateInfo = (pd.Timestamp.today()).strftime("%d-%b-%Y")
-        missingETFcolumns = ['ETF_Symbol', 'Volume', 'Value', 'Last_Trade_Price', 'Previous_Close', 'Trade_Date','Day_High', 'Day_Low', 'Open_Price', 'Day_Trades', '52_Week_High', '52_Week_Low', 'Deliverable_Quantity', 'Deliverable_Quantity_Percentage']
+        missingETFcolumns = ['ETF_Symbol', 'Volume', 'Value', 'Last_Trade_Price', 'Previous_Close', 'Trade_Date','Day_High', 'Day_Low', 'Open_Price', 'Day_Trades', '52_Week_High', '52_Week_Low','NAV', 'Deliverable_Quantity', 'Deliverable_Quantity_Percentage']
         missingETFDataFrame = pd.DataFrame(missingETF, columns=missingETFcolumns)
         file_name ="MissingAsset_"+dateInfo+".xlsx"	
         file_path =os.path.join(r"D:\ETF_Data\ETF_Error\\", file_name)	
