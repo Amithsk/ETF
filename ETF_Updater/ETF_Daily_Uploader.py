@@ -15,7 +15,7 @@ def connect_db():
     return connection
 
 # SQL Queries
-retrieveetf_sql = "SELECT `idetf` FROM `etf` WHERE `etf_symbol` = %s"
+retrieveetf_sql = "SELECT `etf_id` FROM `etf` WHERE `etf_symbol` = %s"
 insert_sql="INSERT `etf_daily_transaction`(`etf_id`,`etf_daily_traded_volume`,`etf_daily_traded_value`,`etf_last_traded_price`,`etf_prevclose_price`,`etf_trade_date`,`etf_traded_high`,`etf_traded_low`,`etf_day_open`,`etf_daily_nooftrade`,`etf_52wh`,`etf_52wl`,`etf_nav`,`etf_daily_deliverableqty`,`etf_daily_deliverablepercentageqty`)values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 # Step 1: Pull latest changes from GitHub
@@ -28,25 +28,25 @@ def pull_latest_changes():
 def process_csv_file(file_path, etf_trade_date):
     connection = connect_db()
     cursor = connection.cursor()
+    required_columns = ['symbol', 'assets', 'open', 'high','low','ltP','qty','trdVal','nav','wkhi','wklo','prevClose']
 
-    # Load the CSV file
-    dataDetails = pd.read_csv(file_path)
-
+   
+    # Load only the required columns using usecols
+    dataDetails = pd.read_csv(file_path, usecols=required_columns, on_bad_lines='skip')
     missingETF = []
-
     # Iterate over each row in the CSV
-    for rwCnt in dataDetails.index:
-        etfsymboldetail = dataDetails.iloc[rwCnt, 0]
-        etfDateOpen = dataDetails.iloc[rwCnt, 2]
-        etfHigh = dataDetails.iloc[rwCnt, 3]
-        etfLow = dataDetails.iloc[rwCnt, 4]
-        etfLTP = dataDetails.iloc[rwCnt, 5]
-        etfVolume = dataDetails.iloc[rwCnt, 8]
-        etfValue = dataDetails.iloc[rwCnt, 9]
-        etfNav = dataDetails.iloc[rwCnt, 10]
-        etf52WH= dataDetails.iloc[rwCnt, 11]
-        etf52WL= dataDetails.iloc[rwCnt, 12]
-        etfPrevclose = dataDetails.iloc[rwCnt, 17]
+    for index, row in dataDetails.iterrows():
+        etfsymboldetail = row['symbol']
+        etfDateOpen = row['open']
+        etfHigh = row['high']
+        etfLow = row['low']
+        etfLTP = row['ltP']
+        etfVolume = row['qty']
+        etfValue = row['trdVal']
+        etfNav = row['nav']
+        etf52WH= row['wkhi']
+        etf52WL= row['wklo']
+        etfPrevclose = row['prevClose']
         #Below values are not returned in the daily report,so assigning null values for now
         etfDayTrade=0
         etfDeliverableQtyPercentage=0
@@ -68,8 +68,8 @@ def process_csv_file(file_path, etf_trade_date):
                 etfDeliverableQty,
                 etfDeliverableQtyPercentage
             )
-            print("Inserting values into ETF daily transaction:", Values)
-            #cursor.execute(insert_sql, Values)
+            print("Inserting values into ETF daily transaction:", Values,file_path,etfsymboldetail)
+            cursor.execute(insert_sql, Values)
         else:
             print(f"ETF symbol '{etfsymboldetail}' not found in the database.")
             missingETFdetails=[etfsymboldetail,etfVolume,etfValue,etfLTP,etfPrevclose,etf_trade_date,etfHigh,etfLow,etfDateOpen,etfDayTrade,etf52WH,etf52WL,etfNav,etfDeliverableQty,etfDeliverableQtyPercentage]
