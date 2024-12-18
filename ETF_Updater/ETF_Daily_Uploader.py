@@ -33,20 +33,37 @@ def process_csv_file(file_path, etf_trade_date):
    
     # Load only the required columns using usecols
     dataDetails = pd.read_csv(file_path, usecols=required_columns, on_bad_lines='skip')
+    # Fill missing values with default values
+    fill_values = {
+        'symbol': '',
+        'open': 0,
+        'high': 0,
+        'low': 0,
+        'ltP': 0,
+        'qty': 0,
+        'trdVal': 0,
+        'nav': 0,
+        'wkhi': 0,
+        'wklo': 0,
+        'prevClose': 0
+    }
+    dataDetails.fillna(value=fill_values, inplace=True)
+
+
     missingETF = []
     # Iterate over each row in the CSV
     for index, row in dataDetails.iterrows():
-        etfsymboldetail = row['symbol'].fillna(0)
-        etfDateOpen = row['open'].fillna(0)
-        etfHigh = row['high'].fillna(0)
-        etfLow = row['low'].fillna(0)
-        etfLTP = row['ltP'].fillna(0)
-        etfVolume = row['qty'].fillna(0)
-        etfValue = row['trdVal'].fillna(0)
-        etfNav = row['nav'].fillna(0)
-        etf52WH= row['wkhi'].fillna(0)
-        etf52WL= row['wklo'].fillna(0)
-        etfPrevclose = row['prevClose'].fillna(0)
+        etfsymboldetail = row['symbol']
+        etfDateOpen = row['open']
+        etfHigh = row['high']
+        etfLow = row['low']
+        etfLTP = row['ltP']
+        etfVolume = row['qty']
+        etfValue = row['trdVal']
+        etfNav = row['nav']
+        etf52WH= row['wkhi']
+        etf52WL= row['wklo']
+        etfPrevclose = row['prevClose']
         #Below values are not returned in the daily report,so assigning null values for now
         etfDayTrade=0
         etfDeliverableQtyPercentage=0
@@ -69,7 +86,7 @@ def process_csv_file(file_path, etf_trade_date):
                 etfDeliverableQtyPercentage
             )
             print("Inserting values into ETF daily transaction:", Values,file_path,etfsymboldetail)
-            cursor.execute(insert_sql, Values)
+            #cursor.execute(insert_sql, Values)
         else:
             print(f"ETF symbol '{etfsymboldetail}' not found in the database.")
             missingETFdetails=[etfsymboldetail,etfVolume,etfValue,etfLTP,etfPrevclose,etf_trade_date,etfHigh,etfLow,etfDateOpen,etfDayTrade,etf52WH,etf52WL,etfNav,etfDeliverableQty,etfDeliverableQtyPercentage]
@@ -118,7 +135,7 @@ def process_files():
             process_csv_file(file_name, etf_trade_date)
 
             # Delete file after processing
-            #delete_file(file_name)
+            delete_file(file_name)
 
 if __name__ == '__main__':
     process_files()
