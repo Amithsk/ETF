@@ -36,17 +36,17 @@ def process_csv_file(file_path, etf_trade_date):
     missingETF = []
     # Iterate over each row in the CSV
     for index, row in dataDetails.iterrows():
-        etfsymboldetail = row['symbol']
-        etfDateOpen = row['open']
-        etfHigh = row['high']
-        etfLow = row['low']
-        etfLTP = row['ltP']
-        etfVolume = row['qty']
-        etfValue = row['trdVal']
-        etfNav = row['nav']
-        etf52WH= row['wkhi']
-        etf52WL= row['wklo']
-        etfPrevclose = row['prevClose']
+        etfsymboldetail = row['symbol'].fillna(0)
+        etfDateOpen = row['open'].fillna(0)
+        etfHigh = row['high'].fillna(0)
+        etfLow = row['low'].fillna(0)
+        etfLTP = row['ltP'].fillna(0)
+        etfVolume = row['qty'].fillna(0)
+        etfValue = row['trdVal'].fillna(0)
+        etfNav = row['nav'].fillna(0)
+        etf52WH= row['wkhi'].fillna(0)
+        etf52WL= row['wklo'].fillna(0)
+        etfPrevclose = row['prevClose'].fillna(0)
         #Below values are not returned in the daily report,so assigning null values for now
         etfDayTrade=0
         etfDeliverableQtyPercentage=0
