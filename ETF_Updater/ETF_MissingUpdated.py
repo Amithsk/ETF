@@ -6,6 +6,35 @@ import pymysql
 import datetime
 import re
 import os
+
+def addetfMapping(connection_details,data_loc):
+	#To add the ETF mapping details
+	try:
+		print("Inside the ETF mapping table")
+		insert_sql="INSERT INTO etf_mapping (etf_name, etf_id) VALUES (%s, %s)"
+		retrieve_sql ="SELECT COUNT(*) FROM etf_mapping WHERE etf_name = %s AND etf_id = %s"
+		cursor=connection_details.cursor()
+		#Read the ETF mapping details from the excel
+		etfMappingtDetails = PD.read_excel(data_loc,sheet_name = 'ETF_Mapping')
+		#Iterate through the rows and insert if not already present
+		for index,row in etfMappingtDetails.iterrows():
+			etf_name =row["ETFName"].strip()
+			etf_id=int(row["etfid"])
+			#Check if the mapping already exists
+			cursor.execute(retrieve_sql,(etf_name,etf_id))
+			exists = cursor.fetchone()[0]
+			if not exists:
+				#cursor.execute(insert_sql,(etf_name,etf_id))
+				print("ETF mapping table updated",etf_name,etf_id)
+		
+	except Exception as e:
+		print(f"Error: {e}")
+		raise e
+	
+	finally:
+		cursor.close()
+
+
  #To add the asset information to the DB
 def addAsset(connection_details,data_loc):
 	try:
@@ -111,7 +140,8 @@ def main():
 	data_loc=r"D:\ETF_Data\ETF_Fund_Details\MissingInfo\missingInfo.xlsx"
 	connection_details=connect_db()
 	#addETF(connection_details,data_loc,monthinfo)
-	addAsset(connection_details,data_loc)
+	#addAsset(connection_details,data_loc)
+	addetfMapping(connection_details,data_loc)
 	disconnect_db(connection_details)
 
 main()
