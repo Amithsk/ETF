@@ -2,6 +2,8 @@
 #This code handles the trackingerror difference data
 #Current process
 #1.Download the data from the AMI website(Applying the filters)
+#2.This will output the file containing the tracking error difference details
+
 #Future->Remove the manual process ,automate the whole flow
 import openpyxl
 import pandas as pd
