@@ -23,7 +23,7 @@ response = requests.post(BASE_URL, headers=HEADERS, data=PAYLOAD)
 if response.status_code != 200:
     raise Exception(f"Failed to fetch data: {response.status_code}")
 
-output_path =r"D:\\ETF_Data\\ETFProcessData\\Downloaded\\TrackingError"
+output_path =r"D:\\ETF_Data\\ETFDataProcessing\\ETFRawData\\TrackingError"
 output_file_name = "debug_processed_data.txt"
 outputfinal = os.path.join(output_path, output_file_name)
 # Save the response
