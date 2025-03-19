@@ -1,111 +1,143 @@
-#Extract the tracking error details from the website
-#Tracking error  details are provided daily,so the code extrac the information daily basis
-#The output of the code will be excel file with the date information
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import undetected_chromedriver as uc
+import time
 import os
+import shutil
+import logging
+import subprocess
+import re
 
-# Define the request details
-BASE_URL = "https://www.amfiindia.com/modules/TrackingErrorDetails"
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-}
-PAYLOAD = {
-    "strMfID": "-1",  # Fetch all mutual funds
-    "strType": "1",   # Data type (Tracking Error)
-    "strdt": "01-Sep-2023"  # Static date for debugging, can be updated dynamically
-}
+# Set up directories
+download_dir = os.path.abspath(r"D:\ETF_Data\ETFDataProcessing\ETFRawData\TrackingError")
+os.makedirs(download_dir, exist_ok=True)
 
-# Send the POST request
-response = requests.post(BASE_URL, headers=HEADERS, data=PAYLOAD)
+temp_download_dir = os.path.abspath(r"D:\TempDownloads")  # Temporary directory for downloads
+os.makedirs(temp_download_dir, exist_ok=True)
 
-if response.status_code != 200:
-    raise Exception(f"Failed to fetch data: {response.status_code}")
+# Function to get installed Chrome version
+def get_chrome_version():
+    try:
+        result = subprocess.run(["reg", "query", "HKEY_CURRENT_USER\\Software\\Google\\Chrome\\BLBeacon", "/v", "version"], capture_output=True, text=True, check=True)
+        match = re.search(r'version\s+REG_SZ\s+([\d.]+)', result.stdout)
+        if match:
+            return match.group(1)
+    except Exception as e:
+        logging.error(f"Error fetching Chrome version: {e}")
+    return None
 
-output_path =r"D:\\ETF_Data\\ETFDataProcessing\\ETFRawData\\TrackingError"
-output_file_name = "debug_processed_data.txt"
-outputfinal = os.path.join(output_path, output_file_name)
-# Save the response
-with open(outputfinal, "w", encoding="utf-8") as file:
-    file.write(response.text)
-print(f"Response saved to {outputfinal} for inspection.")
-
-# Parse the HTML response
-soup = BeautifulSoup(response.text, "html.parser")
-
-# Locate all tables in the HTML
-tables = soup.find_all("table", style="width:100%;margin-top:0;")
-if not tables or len(tables) < 2:
-    raise ValueError("Expected at least two tables, but found fewer.")
-
-# 1. Extract Date Information from the First Table
-date_table = tables[0]
-date_row = date_table.find("tr")
-if not date_row:
-    raise ValueError("Date table is empty or has an unexpected structure.")
-
-date_text = date_row.get_text(strip=True)
-if "Tracking Error for" in date_text:
-    date_info = date_text.split("for")[-1].strip().replace("-", "_")  # Extract date
+# Get Chrome version
+chrome_version = get_chrome_version()
+if chrome_version:
+    logging.info(f"Detected Chrome version: {chrome_version}")
 else:
-    raise ValueError("Date format is unexpected in the first table.")
+    logging.warning("Could not detect Chrome version, using default ChromeDriver")
 
-# 2. Extract Data from the Second Table
-data_table = tables[1]
-rows = data_table.find_all("tr")
-if len(rows) < 2:
-    raise ValueError("Mutual fund details table has an unexpected structure.")
+# Initialize undetected-chromedriver
+options = uc.ChromeOptions()
+prefs = {
+    "download.default_directory": temp_download_dir,  # Temp download folder
+    "download.prompt_for_download": False,  
+    "directory_upgrade": True,
+    "safebrowsing.enabled": True
+}
+options.add_experimental_option("prefs", prefs)
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+#options.add_argument("--headless")
 
-# Extract first-level headers
-first_level_headers = []
-first_level_spans = []  # Track the colspan for each first-level header
-for th in rows[0].find_all("th"):
-    colspan = int(th.get("colspan", 1))  # Default colspan is 1
-    first_level_headers.extend([th.text.strip()] * colspan)  # Repeat header based on colspan
-    first_level_spans.append(colspan)
+driver = uc.Chrome(options=options)
 
-# Extract second-level headers
-second_level_headers = [th.text.strip() for th in rows[1].find_all("th")]
+try:
+    #Step1: Navigate to AMFI website
+    amfi_url = "https://www.amfiindia.com/research-information/other-data/tracking_errordata"
+    driver.get(amfi_url)
+    print("AMFI India website loaded.")
+    time.sleep(10)
 
-# Combine first and second-level headers
-final_headers = []
-second_level_index = 0  # Track the position in the second-level headers
+    #Step2: Select "Tracking Error" radio button
+    tracking_error_radio = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//input[@type='radio' and @value='1']"))  # Changed value from '2' to '1'
+    )
+    tracking_error_radio.click()
+    logging.info("Selected 'Tracking Error' option")
+    time.sleep(2)
 
-for header, span in zip(first_level_headers, first_level_spans):
-    if span > 1:  # Combine first-level header with its sub-headers
-        final_headers.extend([f"{header}_{second_level_headers[i]}" for i in range(second_level_index, second_level_index + span)])
-        second_level_index += span
-    else:  # No sub-header, use the first-level header as-is
-        final_headers.append(header)
+    # Function to update dropdown values
+    def update_dropdown(dropdown_id, value):
+        script = """
+        var select = document.getElementById(arguments[0]);
+        if (select) {
+            select.value = arguments[1];
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            var combobox = document.querySelector('.custom-combobox-input');
+            if (combobox) {
+                var selectedText = select.options[select.selectedIndex].text;
+                combobox.value = selectedText;
+                combobox.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }"""
+        driver.execute_script(script, dropdown_id, value)
+        print(f"Updated '{dropdown_id}' to: {value}")
+        time.sleep(10)
 
+    #Step3: Select "All" in Mutual Fund dropdown
+    update_dropdown("AccMFName", "-1")
 
-# Print the final headers for debugging
-print(f"Final Headers: {final_headers}")
+    time.sleep(20)
 
-# Extract data rows from the second table
-data = []
-for row in rows[2:]:  # Skip the header row
-    cells = [cell.text.strip() for cell in row.find_all(["td", "th"])]
-    print("The values",cells)
-    if len(cells) == len(final_headers):  # Ensure the row matches the header length
-        data.append(cells)
-        
+    #Step4: Select "10-Mar-2025" in Date Picker
+    date_picker = WebDriverWait(driver, 10).until(
+    EC.element_to_be_clickable((By.ID, "dptracking"))  # Correct ID
+        )
+    driver.execute_script("arguments[0].value = '10-Mar-2025';", date_picker)
+    print("Selected date: 10-Mar-2025")
+    time.sleep(10)
 
-# Create DataFrame from the extracted data
-df = pd.DataFrame(data, columns=final_headers)
+    # Step 5: Click the "Go" Button
+    go_button = WebDriverWait(driver, 30).until(
+        EC.element_to_be_clickable((By.ID, "hrfGo"))
+    )
+    driver.execute_script("arguments[0].click();", go_button)
+    print("Clicked 'Go' button.")
 
-# Add the extracted date information to the DataFrame
-print ("The date info",date_info)
-df["Report Date"] = date_info
+    # Step 6: Wait for the Excel icon to appear
+    download_form = WebDriverWait(driver, 50).until(
+    EC.presence_of_element_located((By.XPATH, "//div[@id='divDownloads']//form"))
+    )
+    # Submit the form to trigger download
+    driver.execute_script("arguments[0].submit();", download_form)
+    print("Download triggered.")  
+ 
+  
+    time.sleep(10)
 
-        
-if df is not None:
-     file_path = r"D:\\ETF_Data\\ETFProcessData\\Downloaded\\TrackingError"
-     output_file = f"TrackingErrorData.xlsx"
-     full_path = os.path.join(file_path, output_file)
-     df.to_excel(full_path, index=False)
-     print(f"Data saved to {output_file}")
-    
-else:
-        print("No data was fetched.")
+    # Step 7: Wait for the File to Download
+    def wait_for_download(directory, timeout=60):
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            files = [f for f in os.listdir(directory) if f.endswith(".xls") or f.endswith(".xlsx")]
+            if files:
+                return os.path.join(directory, files[0])
+            time.sleep(10)
+        return None
+
+    downloaded_file = wait_for_download(temp_download_dir)
+    if downloaded_file:
+        print(f"File downloaded: {downloaded_file}")
+        new_filename = "Tracking_Error_Daily_10_Mar_2025.xls"
+        new_filepath = os.path.join(download_dir, new_filename)
+        shutil.move(downloaded_file, new_filepath)
+        print(f"File moved to: {new_filepath}")
+    else:
+        print("Download failed or took too long.")
+
+except Exception as e:
+    print(f"An error occurred: {e}")
+    with open("debug_page.html", "w", encoding="utf-8") as f:
+        f.write(driver.page_source)
+    raise e
+
+finally:
+    driver.quit()
