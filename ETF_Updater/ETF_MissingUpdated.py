@@ -93,6 +93,7 @@ def addETF(connection_details,dataloc,monthinfo):
 				if not(etfSymboldb):
 					values=(etfName,etfAssetdb[0],etfSymbol,etfFundhouse)
 					#cursor.execute(insert_sql,values)
+					print("The ETF added",etfName)
 				else:
 					print("The duplicate values are ",etfAsset,etfSymbol,etfFundhouse)
 #If the Asset information is not present,append Asset in into an list information & write into a file later
@@ -139,9 +140,9 @@ def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
 	data_loc=r"D:\ETF_Data\ETF_Fund_Details\MissingInfo\missingInfo.xlsx"
 	connection_details=connect_db()
-	#addETF(connection_details,data_loc,monthinfo)
+	addETF(connection_details,data_loc,monthinfo)
 	#addAsset(connection_details,data_loc)
-	addetfMapping(connection_details,data_loc)
+	#addetfMapping(connection_details,data_loc)
 	disconnect_db(connection_details)
 
 main()
