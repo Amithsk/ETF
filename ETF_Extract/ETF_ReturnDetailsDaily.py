@@ -2,18 +2,23 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import undetected_chromedriver as uc
+import shutil
 import time
 import os
+import glob
 
 
-# Set up download directory
-download_dir = os.path.abspath(r"D:\ETF_Data\ETFProcessData\Downloaded\AUMReturns")  # Ensure this path exists
+# Set up directories
+download_dir = os.path.abspath(r"D:\ETF_Data\ETFDataProcessing\ETFRawData\Returns")
 os.makedirs(download_dir, exist_ok=True)
+
+temp_download_dir = os.path.abspath(r"D:\TempDownloads")  # Temporary directory for downloads
+os.makedirs(temp_download_dir, exist_ok=True)
 
 # Initialize the undetected-chromedriver
 options = uc.ChromeOptions()
 prefs = {
-    "download.default_directory": download_dir,  # Set default download directory
+    "download.default_directory": temp_download_dir,  # Set default download directory
     "download.prompt_for_download": False,      # Disable download prompt
     "directory_upgrade": True,                  # Auto-upgrade if directory exists
     "safebrowsing.enabled": True                # Enable safe browsing
@@ -65,13 +70,17 @@ try:
 
     # Update the "nav-date" field to "22-Jan-2025"
     try:
-        driver.execute_script("""
-            var dateInput = document.getElementById('nav-date');
-            dateInput.value = '22-Jan-2025';
+        date='22-Jan-2025'
+        driver.execute_script("""var dateInput = document.getElementById('nav-date');
+        if (dateInput) {
+            dateInput.value = arguments[0];
             var event = new Event('change', { bubbles: true });
             dateInput.dispatchEvent(event);
-        """)
-        print("Date input updated to '22-Jan-2025'.")
+            console.log("Date input updated successfully.");
+        } else {
+            console.log("Error: Date input field not found.");
+        }""", date)  # Pass 'date' as an argument
+        print("Date input updated to ",date)
         time.sleep(10)
     except Exception as e:
         print(f"Error updating date: {e}")
@@ -107,8 +116,7 @@ try:
       # Click the download link
     try:
         # Wait for the download link to be clickable
-        download_link = WebDriverWait(driver, 30).until(
-        EC.element_to_be_clickable((By.ID, "download-report-excel")))
+        download_link = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.ID, "download-report-excel")))
         # Scroll the element into view (if necessary)
         driver.execute_script("arguments[0].scrollIntoView(true);", download_link)
         # Click the download link
@@ -120,15 +128,71 @@ try:
         with open("debug_download.html", "w", encoding="utf-8") as f:
             f.write(driver.page_source)
             driver.save_screenshot("debug_download.png")
-    # Step 8: Wait for the file to download
+    def wait_for_download(directory, timeout=60):
+        start_time = time.time()
+        last_files = set()
+        last_size = {}
+        print(f"[INFO] Monitoring directory: {directory}")
+
+        while time.time() - start_time < timeout:
+            # Get all .xls files in the directory
+            xls_files = set(glob.glob(os.path.join(directory, '*.xls')))
+        
+            # Check if new files appeared
+            new_files = xls_files - last_files
+
+        if new_files:
+            downloaded_file = new_files.pop()  # Get the first new file
+            print(f"[SUCCESS] File detected: {downloaded_file}")
+            return downloaded_file
+        
+        # Check if existing files are still growing
+        for file in xls_files:
+            try:
+                current_size = os.path.getsize(file)
+                if current_size > last_size.get(file, 0):
+                    last_size[file] = current_size
+                    print(f"[DEBUG] File still downloading: {file} ({current_size} bytes)")
+                    break  # Continue monitoring as file is growing
+                else:
+                    print(f"[SUCCESS] File download complete: {file}")
+                    return file
+            except Exception as e:
+                print(f"[WARNING] Error checking file {file}: {e}")
+
+        last_files = xls_files
+        time.sleep(2)  # Wait before checking again
+
+        print(f"[ERROR] Timeout reached. No complete .xls file found in {directory}")
+        return None
+
+    # Step 9: Process the downloaded file
     try:
-        time.sleep(10)  # Adjust sleep time based on file size and network speed
-        print(f"File should be downloaded to: {download_dir}")
-    except Exception as exc:
-        print(f"Error clicking 'Download Excel' link: {exc}")
-        with open("debug_download.html", "w", encoding="utf-8") as f:
-            f.write(driver.page_source)
-        driver.save_screenshot("debug_download.png")
+    
+        downloaded_file = wait_for_download(temp_download_dir)
+
+        if downloaded_file:
+            print(f"[INFO] File downloaded successfully: {downloaded_file}")
+
+         # Rename and move the file
+            new_filename = f"fund_performance_{date}.xls"
+            new_filepath = os.path.join(download_dir, new_filename)
+
+         # Ensure target directory exists
+            os.makedirs(download_dir, exist_ok=True)
+
+            # Wait a moment to ensure file is released by browser
+            time.sleep(1)
+
+            # Move the file
+            shutil.move(downloaded_file, new_filepath)
+            print(f"[SUCCESS] File moved to: {new_filepath}")
+
+        else:
+            print("[ERROR] Download failed or took too long.")
+
+    except Exception as e:
+        print(f"[CRITICAL] Error in download process: {str(e)}")
 
 except Exception as e:
     print(f"An error occurred: {e}")
