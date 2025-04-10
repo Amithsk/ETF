@@ -91,11 +91,20 @@ for benchmark, group in df.groupby('benchmark'):
 # Create final DataFrame from best rows and rename columns
 benchmark_df = pd.DataFrame(best_rows).rename(columns=benchmark_columns_mapping)
 
-# Export to Excel
+# Save benchmark data
 benchmark_file = destination_dir / f'Benchmark_Data_{month_str}.xlsx'
 benchmark_df.to_excel(benchmark_file, index=False)
-
 print(f"✅ Exported benchmark data for {len(benchmark_df)} unique benchmarks.")
+
+# Get the AUM details
+etf_aum_df = etf_final[['Scheme Name', 'NAV Date', 'Daily AUM(Cr)']].copy()
+etf_aum_df['Month'] = pd.to_datetime(etf_aum_df['NAV Date']).dt.strftime('%b-%Y')
+etf_aum_df = etf_aum_df[['Scheme Name', 'Month', 'Daily AUM(Cr)']]  # Reorder
+etf_aum_df.rename(columns={'Daily AUM(Cr)': 'AUM'}, inplace=True)
+
+# Save AUM data
+etf_aum_file = destination_dir / f'ETF_AUM_{month_str}.xlsx'
+etf_aum_df.to_excel(etf_aum_file, index=False)
 
 
 print(f"Files created:\n- {etf_file}\n- {benchmark_file}")
