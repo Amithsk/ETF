@@ -156,7 +156,7 @@ def db_update(file_location,file_pattern,excluded_etfs):
        
        for _, row in df.iterrows():
         scheme_name = str(row["Scheme Name"]).strip()
-        AUM =str(row["AUM"]).strip()
+        
                 
         #Skips the row in the list
         if scheme_name in excluded_etfs:
@@ -168,6 +168,7 @@ def db_update(file_location,file_pattern,excluded_etfs):
                 return_month = nav_date.strftime("%b")  # e.g., Sep
                 return_year = nav_date.year
             else:
+                AUM =str(row["AUM"]).strip()
                 nav_date = pd.to_datetime(row["Month"])
                 return_month = nav_date.strftime("%b")  # e.g., Sep
                 return_year = nav_date.year
@@ -207,13 +208,14 @@ def db_update(file_location,file_pattern,excluded_etfs):
                         continue
                     try:
                         #cursor.execute(insertetfaum_sql,(etf_id,AUM,return_month,return_year))
+                        print(f"Successfully inserted{scheme_name}")
                     except Exception as e:
                         print(f"Failed to insert {etf_id} return for {scheme_name}: {e}")
         else:
             print(f"ETF not found: {scheme_name}")
      
    
-       connection.commit()
+       #connection.commit()
        cursor.close()
        connection.close()
 # Step 3: Process etf return details in the repository location
