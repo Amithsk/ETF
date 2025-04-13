@@ -2,7 +2,7 @@ import pandas as pd
 from openpyxl import load_workbook
 
 # Load workbook and sheet
-excel_path = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\AUM_Returns\Fund-Performance-30-Sep-2024.xlsx'
+excel_path = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\AUM_Returns\Fund-Performance-31-Mar-2025.xlsx'
 wb = load_workbook(excel_path, data_only=True)
 ws = wb['Fund_Performance']
 
@@ -27,7 +27,10 @@ df.columns = [clean_column_name(col) for col in df.columns]
 print(df.columns)
 
 # Filter ETF rows
-etf_df = df[df['scheme_name'].str.contains('ETF', case=False, na=False)].copy()
+etf_df = df[
+    df['scheme_name'].str.contains('ETF', case=False, na=False) &
+    ~df['scheme_name'].str.contains(r'\bFOF\b|Fund of Fund', case=False, na=False)
+    ].copy()
 
 # Define columns for ETF and Benchmark
 etf_columns_mapping = {
