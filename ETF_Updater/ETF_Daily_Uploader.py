@@ -96,10 +96,19 @@ def process_csv_file(file_path, etf_trade_date):
     if missingETF:
         dateInfo = (pd.Timestamp.today()).strftime("%d-%b-%Y")
         missingETFcolumns = ['ETF_Symbol', 'Volume', 'Value', 'Last_Trade_Price', 'Previous_Close', 'Trade_Date','Day_High', 'Day_Low', 'Open_Price', 'Day_Trades', '52_Week_High', '52_Week_Low','NAV', 'Deliverable_Quantity', 'Deliverable_Quantity_Percentage']
-        missingETFDataFrame = pd.DataFrame(missingETF, columns=missingETFcolumns)
-        file_name ="MissingAsset_"+dateInfo+".xlsx"	
-        file_path =os.path.join(r"D:\ETF_Data\ETF_Error\\", file_name)	
-        missingETFDataFrame.to_excel(file_path, index=False)
+        loopmissingETFDataFrame = pd.DataFrame(missingETF, columns=missingETFcolumns)
+        
+        file_name ="MissingSymbol_"+dateInfo+".xlsx"	
+        file_path =os.path.join(r"D:\ETF_Data\ETF_Error\\", file_name)
+        if os.path.exists(file_path):
+            existing_data = pd.read_excel(file_path)
+            combined_datamissingETFDataFrame = pd.concat([existing_data, loopmissingETFDataFrame], ignore_index=True)
+        else:
+            combined_datamissingETFDataFrame = loopmissingETFDataFrame
+
+    
+        
+        combined_datamissingETFDataFrame.to_excel(file_path, index=False)
         print(f"Missing ETF data written to {file_path}")
 
     connection.commit()
@@ -135,7 +144,7 @@ def process_files():
             process_csv_file(file_name, etf_trade_date)
 
             # Delete file after processing
-            delete_file(file_name)
+            #delete_file(file_name)
 
 if __name__ == '__main__':
     process_files()
