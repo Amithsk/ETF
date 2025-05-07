@@ -2,7 +2,7 @@ import pandas as pd
 from openpyxl import load_workbook
 
 # Load workbook and sheet
-excel_path = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\AUM_Returns\Fund-Performance-31-Mar-2025.xlsx'
+excel_path = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\AUM_Returns\Fund-Performance-28-Feb-2025.xlsx'
 wb = load_workbook(excel_path, data_only=True)
 ws = wb['Fund_Performance']
 
@@ -70,15 +70,13 @@ etf_final.to_excel(etf_file, index=False)
 
 # Define the fields to evaluate completeness
 benchmark_fields = list(benchmark_columns_mapping.keys())
+benchmark_rows = etf_df[benchmark_fields].dropna(subset=['benchmark'])
 
-# Store best row per benchmark
+# Group by benchmark and select the most complete row
 best_rows = []
-
-# Group by 'benchmark' and select best entry per benchmark
-for benchmark, group in df.groupby('benchmark'):
+for benchmark, group in benchmark_rows.groupby('benchmark'):
     best_row = None
     max_filled = -1
-    
     for _, row in group.iterrows():
         filled_count = sum(
             pd.notna(row[field]) and str(row[field]).strip() != '' for field in benchmark_fields
@@ -86,12 +84,10 @@ for benchmark, group in df.groupby('benchmark'):
         if filled_count > max_filled:
             max_filled = filled_count
             best_row = row
-    
     if best_row is not None:
-        # Select only the needed fields
-        best_rows.append(best_row[benchmark_fields])
+        best_rows.append(best_row)
 
-# Create final DataFrame from best rows and rename columns
+# Create final Benchmark DataFrame
 benchmark_df = pd.DataFrame(best_rows).rename(columns=benchmark_columns_mapping)
 
 # Save benchmark data
