@@ -22,7 +22,7 @@ mapping_sql = "SELECT `etf_id` FROM `etf_mapping` WHERE TRIM(`etf_name`) = %s"
 
 # SQL to insert TER data
 insert_sql = """
-        INSERT INTO `etf_returns`
+        INSERT INTO `etf_expenseratio`
         (`etf_id`, `etf_expenseratio_value`, `etf_expenseratiomonth`, `etf_expenseratioyear`)
         VALUES (%s, %s, %s, %s)
     """
@@ -123,9 +123,11 @@ def db_update(file_location, file_pattern, excluded_etfs):
         return
 
     for _, row in df.iterrows():
+        
         scheme_name = str(row["Scheme Name"]).strip()
+        normalized_scheme_name = normalize_etf_name(scheme_name)
 
-        if scheme_name in excluded_etfs:
+        if normalized_scheme_name in excluded_etfs:
             print(f"Excluded ETF (ignored): {scheme_name}")
             continue
 
@@ -133,7 +135,7 @@ def db_update(file_location, file_pattern, excluded_etfs):
         try:
             dateinfo = pd.to_datetime(str(row["Month"]))
         except Exception as e:
-            print(f"Invalid Month format for {scheme_name}: {e}")
+            print(f"Invalid Month format for {normalized_scheme_name}: {e}")
             continue
 
         return_month = dateinfo.strftime("%b")   # e.g., Apr
@@ -143,12 +145,10 @@ def db_update(file_location, file_pattern, excluded_etfs):
         try:
             expense_ratio = float(row["Total TER (%)"])
         except Exception as e:
-            print(f"Invalid TER value for {scheme_name}: {e}")
+            print(f"Invalid TER value for {normalized_scheme_name}: {e}")
             continue
 
         # Lookup ETF ID
-        
-        normalized_scheme_name = normalize_etf_name(scheme_name)
         cursor.execute(retrieve_sql, (normalized_scheme_name,))
         result = cursor.fetchone()
 
@@ -159,9 +159,9 @@ def db_update(file_location, file_pattern, excluded_etfs):
 
         if result:
             etf_id = result[0]
-            print(f"Inserting TER for {scheme_name} (ID: {etf_id}) - {return_month} {return_year} = {expense_ratio}")
+            print(f"Inserting TER for {scheme_name} (ID: {etf_id}) - {return_month} {return_year} - {expense_ratio}")
             try:
-                #cursor.execute(insert_sql, (etf_id, expense_ratio, return_month, return_year))
+                cursor.execute(insert_sql, (etf_id, expense_ratio, return_month, return_year))
                 print()
             except Exception as e:
                 print(f"Failed to insert TER for {scheme_name}: {e}")
@@ -176,7 +176,7 @@ def db_update(file_location, file_pattern, excluded_etfs):
 # Step 3: Process etf expense details details files in the repository location
 def process_etf_expenseratio(excluded_etfs):
     file_location=r'D:\ETF_Data\ETFDataProcessing\ETFProcessedData\ExpenseRatio'
-    file_pattern="ETF_Data_Apr25.*"     
+    file_pattern="ETF_Data_Jan24.*"     
     process_csv_file(file_location,file_pattern,excluded_etfs)
     db_update(file_location,file_pattern,excluded_etfs)
 
