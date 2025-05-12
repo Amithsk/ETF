@@ -62,17 +62,17 @@ def process_csv_file(file_location, file_pattern,excluded_etfs):
 
     for _, row in df.iterrows():
         scheme_name = str(row["Scheme Name"]).strip()
+        normalized_scheme_name = normalize_etf_name(scheme_name)
+       
         
         
         #Skips the row in the list
-        if scheme_name in excluded_etfs:
+        if normalized_scheme_name in excluded_etfs:
             print(f"Excluded ETF (ignored): {scheme_name}")
             continue  # Skip this row
 
         # Primary lookup
-        print("The value before",scheme_name)
-        normalized_scheme_name = normalize_etf_name(scheme_name)
-        print("The value after",normalized_scheme_name)
+        
         cursor.execute(retrieve_sql, (normalized_scheme_name,))
         result = cursor.fetchone()
 
@@ -176,7 +176,7 @@ def db_update(file_location, file_pattern, excluded_etfs):
 # Step 3: Process etf expense details details files in the repository location
 def process_etf_expenseratio(excluded_etfs):
     file_location=r'D:\ETF_Data\ETFDataProcessing\ETFProcessedData\ExpenseRatio'
-    file_pattern="ETF_Data_*.*"     
+    file_pattern="ETF_Data_Apr25.*"     
     process_csv_file(file_location,file_pattern,excluded_etfs)
     db_update(file_location,file_pattern,excluded_etfs)
 
@@ -186,17 +186,25 @@ def normalize_etf_name(name):
  
 
 if __name__ == '__main__':
-    excluded_etfs = [
+    excluded_etfs_raw = [
     "BANDHAN S&P BSE Sensex ETF",
+    "Bandhan BSE Sensex ETF",
     "Kotak S&P BSE Sensex ETF",
+    "Kotak BSE Sensex ETF",
     "Nippon India ETF S&P BSE Sensex",
+    "Nippon India ETF BSE Sensex",
     "Nippon India ETF S&P BSE Sensex Next 50",
+    "Nippon India ETF BSE Sensex Next 50",
     "SBI S&P BSE 100 ETF",
+    "SBI BSE 100 ETF",
     "SBI S&P BSE Sensex ETF",
+    "SBI BSE Sensex ETF",
     "SBI S&P BSE Sensex Next 50 ETF",
+    "SBI BSE Sensex Next 50 ETF",
     "Motilal Oswal Nifty 50 ETF",
     "Nippon India ETF Nifty CPSE Bond Plus SDL Sep2024 50:50"
     ]
+    excluded_etfs = set(normalize_etf_name(name) for name in excluded_etfs_raw)
     process_etf_expenseratio(excluded_etfs)
 
     
