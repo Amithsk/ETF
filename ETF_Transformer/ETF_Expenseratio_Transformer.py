@@ -4,8 +4,8 @@ import magic
 
 # === CONFIGURATION ===
 # Paths to the two input Excel files
-etf_file = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\ExpenseRatio\ETF_Apr_24.xlsx'
-gold_file = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\ExpenseRatio\Gold_Apr_24.xlsx'
+etf_file = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\ExpenseRatio\ETF_Mar_25.xlsx'
+gold_file = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\ExpenseRatio\Gold_Mar_25.xlsx'
 
 # Output directory
 destination_dir = Path(r'D:\ETF_Data\ETFDataProcessing\ETFProcessedData\ExpenseRatio')
@@ -28,7 +28,7 @@ def debug_etf_trace(df, etf_name, regular_col='Regular Plan - Total TER (%)', di
     etf_df = df[df['Scheme Name'].str.contains(etf_name, case=False, na=False)].copy()
     
     if etf_df.empty:
-        print(f"❌ ETF '{etf_name}' not found in raw data.")
+        print(f"ETF '{etf_name}' not found in raw data.")
         return
 
     print(f"✅ Found {len(etf_df)} rows for '{etf_name}' in raw data.")
