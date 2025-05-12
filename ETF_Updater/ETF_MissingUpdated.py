@@ -18,7 +18,7 @@ def addetfMapping(connection_details,data_loc):
 		etfMappingtDetails = PD.read_excel(data_loc,sheet_name = 'ETF_Mapping')
 		#Iterate through the rows and insert if not already present
 		for index,row in etfMappingtDetails.iterrows():
-			etf_name =row["ETFName"].strip()
+			etf_name =row["ETFName"].strip().upper()
 			etf_id=int(row["etfid"])
 			#Check if the mapping already exists
 			cursor.execute(retrieve_sql,(etf_name,etf_id))
@@ -140,10 +140,9 @@ def main():
 	monthinfo = (datetime.datetime.now()).strftime("%b")
 	data_loc=r"D:\ETF_Data\ETF_Fund_Details\MissingInfo\missingInfo.xlsx"
 	connection_details=connect_db()
-	addETF(connection_details,data_loc,monthinfo)
+	#addETF(connection_details,data_loc,monthinfo)
 	#addAsset(connection_details,data_loc)
 	#addetfMapping(connection_details,data_loc)
 	disconnect_db(connection_details)
 
 main()
-
