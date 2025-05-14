@@ -1,60 +1,45 @@
-# NSE ETF Data Downloader using Selenium + undetected-chromedriver
-import undetected_chromedriver as uc
+#Code to download the ETF details from the NSE website
+#Code needs to be adapted to Github action                                                
+import requests
 import csv
-import json
 import time
 import os
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
-# Target URLs
-home_url = 'https://www.nseindia.com/market-data/exchange-traded-funds-etf'
+# Base URL to fetch ETF data in JSON format
 api_url = 'https://www.nseindia.com/api/etf'
+# Homepage URL to obtain cookies
+home_url = 'https://www.nseindia.com/market-data/exchange-traded-funds-etf'
 
-def fetch_etf_data():
-    options = uc.ChromeOptions()
-    options.headless = True
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-blink-features=AutomationControlled")
+# Headers to simulate a real browser request
+headers = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+    "Referer": "https://www.nseindia.com/market-data/exchange-traded-funds-etf",
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "X-Requested-With": "XMLHttpRequest"
+}
 
-    driver = uc.Chrome(options=options)
-    driver.get(home_url)
-
-    # Let the cookies and headers load properly
-    time.sleep(5)
-
-    # Get cookies and headers
-    selenium_cookies = driver.get_cookies()
-    cookies = {cookie['name']: cookie['value'] for cookie in selenium_cookies}
-    headers = {
-        "User-Agent": driver.execute_script("return navigator.userAgent;"),
-        "Referer": home_url,
-        "Accept": "application/json, text/javascript, */*; q=0.01",
-        "X-Requested-With": "XMLHttpRequest"
-    }
-
-    # Now fetch the API using the cookies and headers
-    import requests
+# Function to establish a session and fetch cookies
+def establish_session():
     session = requests.Session()
-    session.headers.update(headers)
-    session.cookies.update(cookies)
+    session.get(home_url, headers=headers)
+    return session
 
+# Function to fetch data using the session with cookies
+def fetch_etf_data(session):
     try:
-        response = session.get(api_url, timeout=10)
+        response = session.get(api_url, headers=headers)
         if response.status_code == 200:
             return response.json()
         else:
             print(f"Failed to retrieve data. Status code: {response.status_code}")
-            print("Response:", response.text[:200])
+            print(f"Response headers: {response.headers}")
+            print(f"Response content: {response.text}")
             return None
-    except Exception as e:
-        print("Error:", e)
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data: {e}")
         return None
-    finally:
-        driver.quit()
 
+# Function to save JSON data to CSV
 def save_to_csv(json_data, csv_file_path):
     if not json_data or "data" not in json_data:
         print("No valid JSON data to convert.")
@@ -77,13 +62,22 @@ def save_to_csv(json_data, csv_file_path):
     except Exception as e:
         print(f"Error writing CSV file: {e}")
 
+# Main function to fetch the data and save it
 def main():
-    json_data = fetch_etf_data()
+    # Establish session
+    session = establish_session()
+
+    time.sleep(20)
+
+    # Fetch ETF data using the session
+    json_data = fetch_etf_data(session)
+
+    # Save the JSON data to a CSV file in the current directory (for GitHub Actions)
     if json_data:
         csv_file_name = f'ETF_data_{time.strftime("%Y-%m-%d")}.csv'
         csv_file_path = os.path.join(os.getcwd(), csv_file_name)
         save_to_csv(json_data, csv_file_path)
-        return csv_file_name
+        return csv_file_name  # Return the file name for committing
 
 if __name__ == "__main__":
     main()
