@@ -28,7 +28,12 @@ jobs:
     - name: Run ETF CSV generation script
       run: |
         python ETF_Extract/NSE_ETF_Daily_Downloader.py  # Trigger the python file
+        continue-on-error: true
+      
+    - name: Move the file 
+      run: | 
         mv ETF_data_*.csv ETF_Data/Download/               #move the file to download folder in the repo
+        continue-on-error: true
 
     - name: Commit CSV file
       run: |
