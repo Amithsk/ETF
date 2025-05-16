@@ -18,6 +18,8 @@ def get_etf_data():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
+    # Specify the path to chrome/chromium binary explicitly on GCP
+    options.binary_location = "/usr/bin/chromium" 
 
     driver = uc.Chrome(options=options)
     wait = WebDriverWait(driver, 20)
