@@ -21,8 +21,8 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        pip install requests
-        pip install undetected-chromedriver selenium
+        pip3 install requests
+        pip3 install undetected-chromedriver selenium
 
 
     - name: Run ETF CSV generation script
