@@ -28,7 +28,7 @@ jobs:
 
     - name: Run ETF CSV generation script
       run: |
-        source venv/bin/
+        source venv/bin/activate
         python3 ETF_Extract/NSE_ETF_Daily_Downloader.py  # Trigger the python file
         continue-on-error: true
       
