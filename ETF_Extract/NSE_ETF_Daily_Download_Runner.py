@@ -28,14 +28,16 @@ if files:
     shutil.copy2(src_file, dst_file)
     print(f"Copied {latest_file} to Git folder.")
 
-    # Delete original
-    os.remove(src_file)
-    print(f"Deleted {latest_file} from source folder.")
+
 
     # --- Step 3: Git commit and push ---
     os.chdir("/home/amith/ETF/ETF_Data")
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", f"Add new ETF file: {latest_file}"], check=False)
     subprocess.run(["git", "push", "origin", "main"], check=False)
+
+    # Delete original
+    os.remove(src_file)
+    print(f"Deleted {latest_file} from source folder.")
 else:
     print("No new ETF files found to move.")
