@@ -29,7 +29,7 @@ if files:
 
     # Copy to Git folder
     shutil.copy2(src_file, dst_file)
-    print(f"Copied {latest_file} to Git folder.")
+    print(f"Copied {latest_file} to Git folder.{dst_file}")
 
     # --- Step 3: Git commit and push ---
     os.chdir("/home/amith/ETF/ETF_Data")
