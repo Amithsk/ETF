@@ -32,11 +32,20 @@ if files:
     print(f"Copied {latest_file} to Git folder.{dst_file}")
 
     # --- Step 3: Git commit and push ---
-    os.chdir("/home/amith/ETF/ETF_Data")
-    subprocess.run(["git", "add", "."], check=True)
-    subprocess.run(["git", "commit", "-m", f"Add new ETF file: {latest_file}"], check=False)
-    subprocess.run(["git", "pull", "origin", "main", "--rebase"], check=False)
-    subprocess.run(["git", "push", "origin", "main"], check=False)
+    git_dir = "/home/amith/ETF/ETF_Data"
+    os.chdir(git_dir)
+
+    # Ensure on 'main' branch and clean state
+    subprocess.run(["git", "checkout", "main"], cwd=git_dir, check=True)
+    subprocess.run(["git", "fetch", "origin"], cwd=git_dir, check=True)
+    subprocess.run(["git", "reset", "--hard", "origin/main"], cwd=git_dir, check=True)
+    subprocess.run(["git", "pull", "origin", "main"], cwd=git_dir, check=True)
+
+    # Add, commit, and push
+    subprocess.run(["git", "add", "."], cwd=git_dir, check=True)
+    subprocess.run(["git", "commit", "-m", f"Add new ETF file: {latest_file}"], cwd=git_dir, check=False)
+    subprocess.run(["git", "push", "origin", "main"], cwd=git_dir, check=False)
+
 
     # Delete original
     os.remove(src_file)
