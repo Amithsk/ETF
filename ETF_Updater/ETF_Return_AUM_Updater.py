@@ -144,14 +144,13 @@ def db_update(file_location,file_pattern,excluded_etfs):
         return
        
        etfreturn_columns = {
-        "Return 1 Year regular": "1Y",
-        "Return 3 Year regular": "3Y",
-        "Return 5 Year regular": "5Y",
-        "Return 10 Year regular": "10Y",
-        "Return Since launch Regular": "SL"
+        "1-Year Return": "1Y",
+        "3-Year Return": "3Y",
+        "5-Year Return": "5Y",
+        "10-Year Return": "10Y",
+        "Since-Launch Return": "SL"
             }
-
-       
+   
      
        
        for _, row in df.iterrows():
@@ -199,7 +198,7 @@ def db_update(file_location,file_pattern,excluded_etfs):
                         continue
                     try:
                         value = float(row[col])
-                        #cursor.execute(insertetf_sql, (etf_id, period_label, value, return_month, return_year))
+                        cursor.execute(insertetf_sql, (etf_id, period_label, value, return_month, return_year))
                     except Exception as e:
                         print(f"Failed to insert {period_label} return for {scheme_name}: {e}")
             elif file_type == "aum":
@@ -244,6 +243,6 @@ if __name__ == '__main__':
     "SBI BSE Sensex ETF",
     "SBI BSE Sensex Next 50 ETF"
     ]
-    #process_etf_return(excluded_etfs)
-    process_etf_aum(excluded_etfs)
+    process_etf_return(excluded_etfs)
+    #process_etf_aum(excluded_etfs)
     
