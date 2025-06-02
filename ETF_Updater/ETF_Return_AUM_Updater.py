@@ -96,6 +96,28 @@ def process_csv_file(file_location, file_pattern,excluded_etfs):
     cursor.close()
     connection.close()
 
+
+#Function to ensure  that column names are dynamically identified and updated
+def get_etfreturn_columns(columns):
+    etfreturn_columns = {}
+    time_period_map = {
+        '1year': '1Y',
+        '3year': '3Y',
+        '5year': '5Y',
+        '10year': '10Y',
+        'sincelaunch': 'SL'
+    }
+
+    for col in columns:
+        col_lower = col.lower()
+        col_normalized = re.sub(r'[^a-z0-9]', '', col_lower)
+        for key in time_period_map:
+            if key in col_normalized:
+                etfreturn_columns[col] = time_period_map[key]
+                break
+
+    return etfreturn_columns
+
 #Step3:Update the DB
 def db_update(file_location,file_pattern,excluded_etfs):
        connection = connect_db()
@@ -143,14 +165,10 @@ def db_update(file_location,file_pattern,excluded_etfs):
         print("Missing 'Scheme Name' column in Excel.")
         return
        
-       etfreturn_columns = {
-        "1-Year Return": "1Y",
-        "3-Year Return": "3Y",
-        "5-Year Return": "5Y",
-        "10-Year Return": "10Y",
-        "Since-Launch Return": "SL"
-            }
-   
+       etfreturn_columns = get_etfreturn_columns(df.columns)
+       if not etfreturn_columns:
+        print("No valid return columns found in the file.")
+        return
      
        
        for _, row in df.iterrows():
@@ -243,6 +261,6 @@ if __name__ == '__main__':
     "SBI BSE Sensex ETF",
     "SBI BSE Sensex Next 50 ETF"
     ]
-    process_etf_return(excluded_etfs)
+    #process_etf_return(excluded_etfs)
     #process_etf_aum(excluded_etfs)
     

@@ -123,6 +123,27 @@ def discovery_process(df, monthinfo, excluded_assets):
         print(f"Saved missing to {outfile}")
     cur.close(); 
     conn.close()
+#Function to ensure  that column names are dynamically identified and updated
+def get_assetreturn_columns(columns):
+    assetreturn_columns = {}
+    time_period_map = {
+        '1year': '1Y',
+        '3year': '3Y',
+        '5year': '5Y',
+        '10year': '10Y',
+        'sincelaunch': 'SL'
+    }
+
+    for col in columns:
+        col_lower = col.lower()
+        col_normalized = re.sub(r'[^a-z0-9]', '', col_lower)
+        for key in time_period_map:
+            if key in col_normalized:
+                assetreturn_columns[col] = time_period_map[key]
+                break
+
+    return assetreturn_columns
+
 
 # Update DB with returns
 def update_db(df, monthinfo, excluded_assets):
@@ -135,15 +156,12 @@ def update_db(df, monthinfo, excluded_assets):
         " (asset_id, asset_return_timeperiod, asset_returnsvalue, asset_returnsmonth, asset_returnsyear)"
         " VALUES (%s, %s, %s, %s, %s)"
     )
-
-    assetreturn_columns = {
-        'Return 1Year Benchmark': '1Y',
-        'Return 3 year Benchmark': '3Y',
-        'Return 5 year Benchmark': '5Y',
-        'Return 10 Year Benchmark': '10Y',
-        'Return Since Launch Benchmark': 'SL'
-    }
-
+#To ensure that any change in the column header is handled dynamically 
+    assetreturn_columns = get_assetreturn_columns(df.columns)
+    if not assetreturn_columns:
+        print("No valid return columns found in the file.")
+        return
+    
     # Step 1: Deduplicate by selecting the best row per asset
     best_rows = {}
     for _, row in df.iterrows():
@@ -179,7 +197,7 @@ def update_db(df, monthinfo, excluded_assets):
                     continue
                 try:
                     value = float(value_raw)
-                    cursor.execute(insert_sql, (etf_id, period_label, value, return_month, return_year))
+                    #cursor.execute(insert_sql, (etf_id, period_label, value, return_month, return_year))
                 except Exception as e:
                     print(f"Failed to insert {period_label} return for {asset_name}: {e}")
         else:
