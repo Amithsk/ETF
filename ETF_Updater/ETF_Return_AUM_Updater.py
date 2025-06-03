@@ -164,13 +164,8 @@ def db_update(file_location,file_pattern,excluded_etfs):
        if "Scheme Name" not in df.columns:
         print("Missing 'Scheme Name' column in Excel.")
         return
-       
-       etfreturn_columns = get_etfreturn_columns(df.columns)
-       if not etfreturn_columns:
-        print("No valid return columns found in the file.")
-        return
-     
-       
+ 
+             
        for _, row in df.iterrows():
         scheme_name = str(row["Scheme Name"]).strip()
         
@@ -209,6 +204,10 @@ def db_update(file_location,file_pattern,excluded_etfs):
             etf_id = result[0]
             print(f"Found ETF: {scheme_name} -> ID: {etf_id}")
             if file_type == "data":
+                etfreturn_columns = get_etfreturn_columns(df.columns)
+                if not etfreturn_columns:
+                    print("No valid return columns found in the file.")
+                    return
                 for col, period_label in etfreturn_columns.items():
                     value_raw = row.get(col)
                     if pd.isna(value_raw):
@@ -224,7 +223,7 @@ def db_update(file_location,file_pattern,excluded_etfs):
                         print(f"Skipping AUM insert for {scheme_name} due to missing value.")
                         continue
                     try:
-                        #cursor.execute(insertetfaum_sql,(etf_id,AUM,return_month,return_year))
+                        cursor.execute(insertetfaum_sql,(etf_id,AUM,return_month,return_year))
                         print(f"Successfully inserted{scheme_name}")
                     except Exception as e:
                         print(f"Failed to insert {etf_id} return for {scheme_name}: {e}")
@@ -232,7 +231,7 @@ def db_update(file_location,file_pattern,excluded_etfs):
             print(f"ETF not found: {scheme_name}")
      
    
-       #connection.commit()
+       connection.commit()
        cursor.close()
        connection.close()
 # Step 3: Process etf return details in the repository location
@@ -262,5 +261,5 @@ if __name__ == '__main__':
     "SBI BSE Sensex Next 50 ETF"
     ]
     #process_etf_return(excluded_etfs)
-    #process_etf_aum(excluded_etfs)
+    process_etf_aum(excluded_etfs)
     
