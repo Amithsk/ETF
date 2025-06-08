@@ -26,32 +26,30 @@ def format_asset_name(asset_name):
     asset_name = str(asset_name).replace('\u00A0', ' ')
     
     #Rule 2:Replace 'TRI' at the end with 'Index'
-    asset_name = re.sub(r'\bTRI\s*$', 'Index', asset_name, flags=re.IGNORECASE)
+    asset_name = re.sub(r'(?<!\bIndex)\s*\(?\s*(TRI|Total\s+Return\s+Index)\s*\)?\s*$',' Index',asset_name,flags=re.IGNORECASE)
+    
 
     # Rule 3: Add 'Index' if it's not present
     if re.search(r'\bindex\b', asset_name, flags=re.IGNORECASE) is None:
         asset_name += ' Index'
 
-    # Rule 4: Remove the extra 'Index' if present twice
-    asset_name = re.sub(r'\s+Index\s+Index', ' Index', asset_name)
-
-    # Rule 5: Convert 'Weighted' to 'Weight'
+    # Rule 4: Convert 'Weighted' to 'Weight'
     asset_name = asset_name.replace('Weighted', 'Weight')
 
-    # Rule 6: Normalize whitespace
+    # Rule 5: Normalize whitespace
     asset_name = re.sub(r'\s+', ' ', asset_name).strip()
 
-    # Rule 7: Add 'S&P' to BSE assets
+    # Rule 6: Add 'S&P' to BSE assets
     if asset_name.startswith("BSE"):
         asset_name = "S&P " + asset_name
 
-    # Rule 8: Fix space after '400'
+    # Rule 7: Fix space after '400'
     asset_name = re.sub(r'(?<!\s)400(?!\s)', ' 400 ', asset_name)     # No space before or after
     asset_name = re.sub(r'(?<!\s)400(?=\s)', ' 400', asset_name)      # No space before, has space after
     asset_name = re.sub(r'(?<=\s)400(?!\s)', '400 ', asset_name)      # Has space before, no space after
     asset_name = re.sub(r'\s{2,}', ' ', asset_name).strip() 
 
-    # Rule 9: Fix space after '200'
+    # Rule 8: Fix space after '200'
     asset_name = re.sub(r'(?<!\s)200(?!\s)', ' 200 ', asset_name)     # No space before or after
     asset_name = re.sub(r'(?<!\s)200(?=\s)', ' 200', asset_name)      # No space before, has space after
     asset_name = re.sub(r'(?<=\s)200(?!\s)', '200 ', asset_name)      # Has space before, no space after
@@ -68,20 +66,38 @@ def format_asset_name(asset_name):
     # Rule 10: Replace 
         #Replace gold-related phrases with 'Gold Index'
     asset_name = re.sub(r'(?i)\b(Domestic\s+)?Prices?\s+of\s+(physical\s+)?Gold(\s+Index)?\b','Gold Index',asset_name)
+    asset_name = re.sub(r'(?i)\bLBMA\s+AM\s+Gold\s+Prices?\s*-\s*IPru\b','Gold Index', asset_name)
 
-        #Replace various silver-related phrases with 'Silver Index'
+    #Replace various silver-related phrases with 'Silver Index'
     asset_name = re.sub(
     r'(?i)\b((Domestic\s+)?Prices?\s+of\s+(physical\s+)?Silver|LBMA\s+AM\s+fixing\s+Prices)\s*(Index)?\b',
-    'Silver Index',
-    asset_name
-)
-        #Replace  NYSE FANG -> NYSE FANG INDEX
+    'Silver Index', asset_name)
+
+    #Replace  NYSE FANG -> NYSE FANG INDEX
     asset_name = re.sub(r'(?i)\bNYSE\s+FANG\+\s+Index\b', 'NYSE FANG INDEX', asset_name)
-        #Replace  HANG SENG -> HANG SENG INDEX
+    #Replace  HANG SENG -> HANG SENG INDEX
     asset_name = re.sub(r'(?i)\bHang\s+Seng\s+TECH\s+Index\b', 'HANG SENG INDEX', asset_name)
-        #Replace Nifty Alpha Low -Volatility 30 TRI ->Nifty Alpha Low-Volatility 30 TRI
+    #Replace Nifty Alpha Low -Volatility 30 TRI ->Nifty Alpha Low-Volatility 30 TRI
     asset_name = re.sub(r'(?i)^Nifty Alpha Low\s*-\s*Volatility 30 Index$', 'NIFTY ALPHA LOW-VOLATILITY 30 INDEX', asset_name)
 
+    #Replace NIFTY 500 Multicap 50:25:25 Total Return Index → NIFTY 500 MULTICAP 50:25:25 INDEX
+    #asset_name = re.sub(r'(?i)\bNIFTY\s*500\s*MULTICAP\s*50:25:25\s*(Total\s+Return\s+Index|TRI)?\b',
+    #'NIFTY 500 MULTICAP 50:25:25 INDEX',asset_name)
+
+    #Replace  NIFTY500 Value 50 TRI → NIFTY500 VALUE 50 INDEX
+    #asset_name = re.sub(r'(?i)\bNIFTY\s*500\s*VALUE\s*50\s*(TRI|Total\s+Return\s+Index)?\b',
+    #'NIFTY500 VALUE 50 INDEX',asset_name)
+
+    #Replace Nifty Capital Markets Index (TRI) → NIFTY CAPITAL MARKETS INDEX
+    asset_name = re.sub(r'(?i)\bNIFTY\s*CAPITAL\s*MARKETS\s*INDEX\s*(\(TRI\)|TRI|Total\s+Return\s+Index)?\b',
+    'NIFTY CAPITAL MARKETS INDEX',asset_name)
+    
+    #Replace Nifty India New Age Consumption TRI → NIFTY INDIA CONSUMPTION INDEX
+    asset_name = re.sub(r'(?i)\bNIFTY\s*INDIA\s*(NEW\s*AGE\s*)?CONSUMPTION\s*(TRI|Total\s+Return\s+Index|INDEX)?\b',
+    'NIFTY INDIA CONSUMPTION INDEX',asset_name)
+
+    # Rule 11: Remove the extra 'Index' if present twice
+    asset_name = re.sub(r'(Index)(\s*|\u00A0)+Index', r'\1', asset_name, flags=re.IGNORECASE)
 
     return asset_name
 
@@ -206,7 +222,7 @@ def update_db(df, monthinfo, excluded_assets):
         else:
             print(f"Asset not found: {asset_name}")
 
-    connection.commit()
+    #connection.commit()
     cursor.close()
     connection.close()
            
