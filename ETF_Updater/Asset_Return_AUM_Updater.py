@@ -89,6 +89,9 @@ def format_asset_name(asset_name):
 def load_and_format(file_location, file_pattern):
     search_path = os.path.join(file_location, file_pattern)
     files = glob.glob(search_path)
+    
+    #To display which file is getting processed
+    print(f"Processing file: {files[0]}")
     if not files:
         raise FileNotFoundError(f"No files matching {search_path}")
     path = files[0]
