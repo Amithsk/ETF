@@ -80,7 +80,7 @@ def process_csv_file(file_location, file_pattern,excluded_etfs):
 
         if result:
             etf_id = result[0]
-            print(f"Found ETF: {scheme_name} -> ID: {etf_id}")
+            #print(f"Found ETF: {scheme_name} -> ID: {etf_id}")
         else:
             print(f"ETF not found: {scheme_name}")
             missing_rows.append(row)
@@ -215,7 +215,7 @@ def db_update(file_location,file_pattern,excluded_etfs):
                         continue
                     try:
                         value = float(row[col])
-                        cursor.execute(insertetf_sql, (etf_id, period_label, value, return_month, return_year))
+                        #cursor.execute(insertetf_sql, (etf_id, period_label, value, return_month, return_year))
                     except Exception as e:
                         print(f"Failed to insert {period_label} return for {scheme_name}: {e}")
             elif file_type == "aum":
@@ -223,15 +223,15 @@ def db_update(file_location,file_pattern,excluded_etfs):
                         print(f"Skipping AUM insert for {scheme_name} due to missing value.")
                         continue
                     try:
-                        cursor.execute(insertetfaum_sql,(etf_id,AUM,return_month,return_year))
-                        print(f"Successfully inserted{scheme_name}")
+                        #cursor.execute(insertetfaum_sql,(etf_id,AUM,return_month,return_year))
+                        print(f"Successfully inserted {scheme_name}")
                     except Exception as e:
                         print(f"Failed to insert {etf_id} return for {scheme_name}: {e}")
         else:
             print(f"ETF not found: {scheme_name}")
      
    
-       connection.commit()
+       #connection.commit()
        cursor.close()
        connection.close()
 # Step 3: Process etf return details in the repository location
@@ -260,6 +260,6 @@ if __name__ == '__main__':
     "SBI BSE Sensex ETF",
     "SBI BSE Sensex Next 50 ETF"
     ]
-    #process_etf_return(excluded_etfs)
-    process_etf_aum(excluded_etfs)
+    process_etf_return(excluded_etfs)
+    #process_etf_aum(excluded_etfs)
     
