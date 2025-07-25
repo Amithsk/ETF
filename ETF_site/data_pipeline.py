@@ -4,6 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 import os
 import urllib
 from pathlib import Path
+import shutil
 
 def fetch_db_connection():
     password = os.getenv('MYSQL_PASSWORD')
@@ -50,9 +51,23 @@ def render_template(etfs, summary):
 
     print("output/index.html generated")
 
+def copy_assets():
+    base_path = Path(__file__).resolve().parent
+    output_path = base_path / "output"
+
+    for asset in ["etf_site.css", "etf_site.js"]:
+        src = base_path / asset
+        dst = output_path / asset
+        if src.exists():
+            shutil.copy(src, dst)
+            print(f"Copied {asset} to output/")
+        else:
+            print(f"{asset} not found at {src}")
+
 # Main function
 if __name__ == "__main__":
     dbconnection = fetch_db_connection()
     etfs = fetch_etf_data(dbconnection)
     summary = compute_summary(etfs)
     render_template(etfs, summary)
+    copy_assets()
