@@ -53,7 +53,7 @@ def render_template(etfs, summary):
 
 def copy_assets():
     base_path = Path(__file__).resolve().parent
-    output_path = base_path / "output"
+    output_path = base_path.parent / "output"
 
     for asset in ["etf_site.css", "etf_site.js"]:
         src = base_path / asset
