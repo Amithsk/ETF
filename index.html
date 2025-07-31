@@ -1,49 +1,1648 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NSE ETF Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ETF Dashboard</title>
   <link rel="stylesheet" href="etf_site.css" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-  <div class="dashboard-container">
+<body class="bg-background text-foreground font-sans min-h-screen">
 
-    <!-- Header -->
-    <header class="dashboard-header">
-      <h1><i class="fas fa-chart-line"></i>NSE ETF Dashboard</h1>
-      <div class="search-container">
-        <i class="fas fa-search"></i>
-      </div>
+  <div class="container mx-auto px-4 py-10">
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold text-primary mb-2">ETF Dashboard</h1>
+      <p class="text-muted-foreground">A summary of available ETFs</p>
     </header>
 
-    <!-- Summary Cards -->
-    <section class="summary-section">
-      <div class="summary-card">
-        <div class="card-icon"><i class="fas fa-coins"></i></div>
-        <div class="card-content">
-          <h3>265</h3>
-          <p>Total ETFs</p>
-        </div>
+    <!-- Summary Section -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+      <div class="bg-card shadow-card rounded-lg p-6">
+        <p class="text-sm text-muted-foreground">Total ETFs</p>
+        <h2 id="total-etfs" data-count="266" class="text-2xl font-semibold">0</h2>
       </div>
-      <div class="summary-card">
-        <div class="card-icon"><i class="fas fa-layer-group"></i></div>
-        <div class="card-content">
-          <h3>101</h3>
-          <p>Asset Categories</p>
-        </div>
+      <div class="bg-card shadow-card rounded-lg p-6">
+        <p class="text-sm text-muted-foreground">Asset Categories</p>
+        <h2 id="total-categories" data-count="101" class="text-2xl font-semibold">0</h2>
       </div>
-      <div class="summary-card">
-        <div class="card-icon"><i class="fas fa-building"></i></div>
-        <div class="card-content">
-          <h3>29</h3>
-          <p>Mutual Funds houses</p>
-        </div>
+      <div class="bg-card shadow-card rounded-lg p-6">
+        <p class="text-sm text-muted-foreground">Fund Houses</p>
+        <h2 id="total-funds" data-count="29" class="text-2xl font-semibold">0</h2>
+
       </div>
     </section>
 
-
+    <!-- Table of ETFs -->
+    <section class="overflow-x-auto bg-card rounded-lg shadow-card">
+      <table class="min-w-full table-auto">
+        <thead class="bg-secondary text-secondary-foreground text-left text-sm uppercase tracking-wide">
+          <tr>
+            <th class="px-4 py-3">ETF Name</th>
+            <th class="px-4 py-3">Fund House</th>
+            <th class="px-4 py-3">Asset Category</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border text-sm">
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BSL NIFTY BANK ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NYSE FANG+ ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">50</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">TATA NIFTY PRIVATE BANK EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">TATA MUTUAL FUND</td>
+            <td class="px-4 py-2">51</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY50 EQUAL WEIGHT ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">52</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP S&P BSE SENSEX ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">53</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY GROWTH SECTORS 15 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">54</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY 100 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">55</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY INDIA CONSUMPTION</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">56</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY FMCG ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">57</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET S&P 500 TOP 50 ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">58</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS NIFTY INDIA CONSUMPTION ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">56</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI NIFTY IT ETF</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY PSU BANK ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">60</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRU NIFTY ALPHA LOW- VOLATILITY 30 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">61</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY DIVIDEND OPPORTUNITIES 50</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">62</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY 50 SHARIAH BEES</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">63</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY50 VALUE 20 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">64</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">INVESCO INDIA NIFTY 50 ETF</td>
+            <td class="px-4 py-2">INVESCO MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL S&P BSE SENSEX ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">53</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET S&P BSE SENSEX ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">53</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY PRIVATE BANK ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">51</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">LIC MF NIFTY 100 ETF</td>
+            <td class="px-4 py-2">LIC MUTUAL FUND</td>
+            <td class="px-4 py-2">55</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS S&P BSE SENSEX ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">53</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC S&P BSE SENSEX ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">53</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY 100 ESG SECTOR LEADERS ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">67</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BAJAJ FINSERV NIFTY 50 ETF</td>
+            <td class="px-4 py-2">BAJAJ FINSERV MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY 100 LOW VOLATILITY 30 ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">68</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY INFRASTRUCTURE ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">69</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY 50 ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL S&P BSE LOW VOLATILITY ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">159</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">QUANTUM NIFTY 50 ETF</td>
+            <td class="px-4 py-2">QUANTUM MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL S&P BSE 500 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">71</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">TATA NIFTY 50 ETF</td>
+            <td class="px-4 py-2">TATA MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY INDIA CONSUMPTION ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">56</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BSL NIFTY 200 MOMENTUM 30 ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">72</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">EDELWEISS NIFTY500 MULTICAP MOMENTUM QUAL. 50 ETF</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">147</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BARODA BNP PARIBAS NIFTY BANK ETF</td>
+            <td class="px-4 py-2">BARODA BNP MUIUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY AUTO ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">74</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE NIFTY PSE ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">75</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY 200 QUALITY 30 ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">76</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BSL NIFTY 50 ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY IT</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY IT ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY INDIA CONSUMPTION ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">56</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY IT ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE CRISIL 10 YEAR GILT ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">77</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY CONSUMPTION ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">56</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY BANK ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY BANK ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS NIFTY BANK ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY 50 BEES</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY BANK ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY INFRASTRUCTURE BEES</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">69</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL S&P BSE HEALTHCARE ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">79</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY NEXT 50 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">80</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY 200 MOMENTUM 30 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">72</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY BANK ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY 50 ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BHARAT 22 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">82</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY IT ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY 50 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY 50 ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY PRIVATE BANK ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">51</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL M50 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI NIFTY BANK ETF</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY 50 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY PRIVATE BANK ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">51</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY 50 ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY IT ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY SMALLCAP 250 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">83</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NASDAQ 100 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">84</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY BANK BEES</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI NIFTY 50 ETF</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ZERODHA NIFTY 100 ETF</td>
+            <td class="px-4 py-2">ZERODHA MUTUAL FUND</td>
+            <td class="px-4 py-2">55</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY50 VALUE 20 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">64</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BAJAJ FINSERV NIFTY BANK ETF</td>
+            <td class="px-4 py-2">BAJAJ FINSERV MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY 100 LOW VOL 30 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">85</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY100 QUALITY 30 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">85</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY100 LOW VOLATILITY 30 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">68</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY 200 QUALITY 30 ETF REGULAR</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">76</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BSL S&P BSE SENSEX ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">53</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BHARAT BOND ETF-APRIL 2032</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">88</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY 200 MOMENTUM 30 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">72</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS NIFTY 50 ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC S&P BSE 500 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">71</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BANDHAN NIFTY 50 ETF</td>
+            <td class="px-4 py-2">BANDHAN MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BHARAT BOND ETF-APRIL 2031-GROWTH</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">144</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY50 EQUAL WEIGHT ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">52</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY OIL & GAS ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">90</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BSL NIFTY IT ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY 50 VALUE 20</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">64</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS NIFTY HEALTHCARE ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">93</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY500 MULTICAP 50:25:25 ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">94</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY IT ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY 100 LOW VOLATILITY 30 ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">68</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA NIFTY AUTO ETF</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">74</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY PRIVATE BANK ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">51</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY 10 YR BENCHMARK G-SEC ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">96</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL S&P BSE MIDCAP SELECT ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">97</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY BANK ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRU NIFTY COMMODITIES ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">98</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY BANK ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY 200 ALPHA 30 ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">99</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY 100</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">55</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">LIC MF NIFTY 50 ETF</td>
+            <td class="px-4 py-2">LIC MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">CPSE ETF</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">100</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY INDIA MANUFACTURING ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">101</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY200 MOMENTUM 30 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">72</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY200 VALUE 30 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">102</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI NIFTY MIDCAP 150 EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">103</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW NIFTY EV & NEW AGE AUTOMOTIVE ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">104</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY 500 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">105</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BSL NIFTY HEALTHCARE ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">93</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY IT ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY SMALLCAP 250 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">83</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BHARAT BOND ETF - APRIL 2033</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">106</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL S&P BSE QUALITY ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">107</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI NIFTY NEXT 50 EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">80</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI S&P BSE SENSEX NEXT 50 EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">108</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BHARAT BOND ETF-APRIL 2025-GROWTH</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">145</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY 5 YR BENCHMARK G-SEC</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">109</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS NIFTY IT ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">59</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">EDELWEISS NIFTY BANK ETF</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">49</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY MNC ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">110</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BHARAT BOND ETF-APRIL 2030-GROWTH</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">146</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY 8-13 YR G-SEC LONG TERM GILT</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">111</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ZERODHA NIFTY 1D RATE LIQUID ETF</td>
+            <td class="px-4 py-2">ZERODHA MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW NIFTY 1D RATE LIQUID ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL S&P BSE ENHANCED VALUE ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">113</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP S&P BSE LIQUID RATE ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SHRIRAM NIFTY 1D RATE LIQUID ETF</td>
+            <td class="px-4 py-2">SHRIRAM MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BAJAJ FINSERV NIFTY 1D RATE LIQUID ETF</td>
+            <td class="px-4 py-2">BAJAJ FINSERV MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY MIDCAP 150 ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">103</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY 1D RATE LIQUID ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">LIC MF S&P BSE SENSEX ETF</td>
+            <td class="px-4 py-2">LIC MUTUAL FUND</td>
+            <td class="px-4 py-2">53</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY FINANCIAL SERVICES ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">115</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY PSU BANK ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">60</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW NIFTY INDIA DEFENCE ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">138</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE CRISIL OVERNIGHT FUND AI ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">117</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY MIDCAP 150</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">103</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL S&P BSE LIQUID RATE ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY 1D RATE LIQUID ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY 1D RATE LIQUID BEES</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY 1D RATE ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL MIDCAP 100 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">70</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY 1D RATE LIQUID ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY TOP 10 EQUAL WEIGHT ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">119</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ZERODHA NIFTY MIDCAP 150 ETF</td>
+            <td class="px-4 py-2">ZERODHA MUTUAL FUND</td>
+            <td class="px-4 py-2">103</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY 1D RATE LIQUID ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI S&P BSE SENSEX ETF</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">53</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRU NIFTY 5 YR BENCHMARK G-SEC ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">109</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY 500 MOMENTUM 50 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">120</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE CRISIL BROAD BASED GILT ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">121</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">TATA NIFTY INDIA DIGITAL EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">TATA MUTUAL FUND</td>
+            <td class="px-4 py-2">122</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE NIFTY 200 QUALITY 30 ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">76</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">LIC MF NIFTY 8-13 YR G-SEC ETF</td>
+            <td class="px-4 py-2">LIC MUTUAL FUND</td>
+            <td class="px-4 py-2">123</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY ALPHA 50 ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">124</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY EV AND NEW AGE AUTOMOTIVE ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">104</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY HEALTHCARE ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">93</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY NEXT 50 ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">80</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL 5 YEAR G-SEC ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">109</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS NIFTY AAA BOND PLUS SDL APR 2026 50:50 ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">126</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC NIFTY PSU BANK ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">60</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY NEXT 50 JUNIOR BEES</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">80</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY NEXT 50 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">80</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY 10 YR BENCHMARK G-SEC ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">96</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY FINANCIAL SERVICES EX-BANK ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">127</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA NIFTY PHARMA ETF</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">128</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY 50 VALUE 20 ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">64</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY PSU BANK BEES</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">60</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY MIDSMALLCAP400 MOMENTUM QUALITY 100 ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">129</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI NIFTY 5 YR BENCHMARK G-SEC ETF</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">109</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF NIFTY SDL APR 2026 TOP 20 EQUAL WEIGHT</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">130</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY PSU BANK ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">60</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY MIDCAP 150 ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">103</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY METAL ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">131</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY MIDCAP 150 QUALITY 50 ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">132</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI NIFTY 10 YR BENCHMARK G-SEC ETF</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">96</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY REALTY ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">133</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI NIFTY NEXT 50 ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">80</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NASDAQ Q50 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">134</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY SMALLCAP 250 MOMENTUM QUALITY 100 ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">135</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">LIC MF NIFTY MIDCAP 100 ETF</td>
+            <td class="px-4 py-2">LIC MUTUAL FUND</td>
+            <td class="px-4 py-2">70</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY PSU BANK ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">60</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY MIDCAP 50 ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">137</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BSL NIFTY NEXT 50 ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">80</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY MIDCAP 150 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">103</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY INDIA DEFENCE ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">138</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF HANG SENG BEES</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">139</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY 100 ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">55</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY METAL ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">131</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET HANG SENG TECH ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">139</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">BARODA BNP PARIBAS GOLD ETF</td>
+            <td class="px-4 py-2">BARODA BNP PARIBAS MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY 8-13 YR G-SEC ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">111</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP NIFTY HEALTHCARE ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">93</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW GOLD ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">TATA GOLD EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">TATA MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">EDELWEISS GOLD ETF</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI GOLD ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP GOLD ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET GOLD ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI GOLD EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA ETF GOLD BEES</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK GOLD ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BSL GOLD ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL GOLD ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ZERODHA GOLD ETF</td>
+            <td class="px-4 py-2">ZERODHA MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS GOLD ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">QUANTUM GOLD FUND</td>
+            <td class="px-4 py-2">QUANTUM MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC GOLD EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">INVESCO INDIA GOLD EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">INVESCO MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">IDBI GOLD EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">IDBI MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP SILVER ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">TATA SILVER EXCHANGE TRADED FUND</td>
+            <td class="px-4 py-2">TATA MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET SILVER ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK SILVER ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UTI SILVER EXCHANGE TRADED FUND </td>
+            <td class="px-4 py-2">UTI MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">EDELWEISS SILVER ETF</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS SILVER ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ADITYA BSL SILVER ETF</td>
+            <td class="px-4 py-2">ADITYA BIRLA SUN LIFE MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL SILVER ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA SILVER ETF</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">HDFC SILVER ETF</td>
+            <td class="px-4 py-2">HDFC MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI SILVER ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NAVI NIFTY 50 ETF</td>
+            <td class="px-4 py-2">NAVI MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY INDIA NEW AGE CONSUMPTION ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">56</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">EDELWEISS BSE CAPITAL MARKETS & INSURANCE ETF</td>
+            <td class="px-4 py-2">EDELWEISS MUTUAL FUND</td>
+            <td class="px-4 py-2">148</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">DSP BSE SENSEX NEXT 30 ETF</td>
+            <td class="px-4 py-2">DSP MUTUAL FUND</td>
+            <td class="px-4 py-2">150</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW NIFTY INDIA RAILWAYS PSU ETF</td>
+            <td class="px-4 py-2">GROWW NIFTY FUND</td>
+            <td class="px-4 py-2">149</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">UNION GOLD ETF</td>
+            <td class="px-4 py-2">UNION MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK MSCI INDIA ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">152</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW NIFTY 200 ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">151</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL BSE LIQUID RATE ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">114</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ANGEL ONE NIFTY TOTAL MARKET ETF</td>
+            <td class="px-4 py-2">ANGEL ONE MUTUAL FUND</td>
+            <td class="px-4 py-2">153</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">360 ONE GOLD ETF</td>
+            <td class="px-4 py-2">360 ONE MUTUAL FUND</td>
+            <td class="px-4 py-2">142</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY 100 EQUAL WEIGHT ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">154</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY CAPITAL MARKET ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">155</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">AXIS NIFTY500 VALUE 50 ETF</td>
+            <td class="px-4 py-2">AXIS MUTUAL FUND</td>
+            <td class="px-4 py-2">156</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET BSE 200 EQUAL WEIGHT ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">157</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET BSE SELECT IPO ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">158</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ZERODHA SILVER ETF</td>
+            <td class="px-4 py-2">ZERODHA MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW NIFTY 500 MOMENTUM 50 ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">120</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY EV & NEW AGE AUTOMOTIVE ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">104</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">SBI BSE PSU BANK ETF</td>
+            <td class="px-4 py-2">SBI MUTUAL FUND</td>
+            <td class="px-4 py-2">60</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ANGEL ONE NIFTY 1D RATE LIQUID ETF</td>
+            <td class="px-4 py-2">ANGEL ONE MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY 1D RATE LIQUID ETF GROWTH</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">112</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">360 ONE SILVER ETF</td>
+            <td class="px-4 py-2">360 ONE MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY MIDCAP 150 ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">103</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY NEXT 50 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">80</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY 50 EQUAL WEIGHT ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">52</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY50 EQUAL WEIGHT ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">52</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW SILVER ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">143</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL BSE INDIA INFRASTRUCTURE ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">160</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ANGEL ONE NIFTY 50 ETF</td>
+            <td class="px-4 py-2">ANGEL ONE MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY INDIA MANUFACTURING ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">101</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY PSE ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">75</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY INDIA TOURISM ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">162</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">NIPPON INDIA BSE SENSEX NEXT 30 ETF</td>
+            <td class="px-4 py-2">NIPPON INDIA MUTUAL FUND</td>
+            <td class="px-4 py-2">150</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW NIFTY 500 LOW VOLATILITY 50 ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">164</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">ICICI PRUDENTIAL NIFTY TOP 15 EQUAL WEIGHT ETF</td>
+            <td class="px-4 py-2">ICICI MUTUAL FUND</td>
+            <td class="px-4 py-2">165</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW NIFTY INDIA INTERNET ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">166</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY MIDCAP150 MOMENTUM 50 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">167</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MIRAE ASSET NIFTY INDIA INTERNET ETF</td>
+            <td class="px-4 py-2">MIRAE ASSET MUTUAL FUND</td>
+            <td class="px-4 py-2">166</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">MOTILAL OSWAL NIFTY ALPHA 50 ETF</td>
+            <td class="px-4 py-2">MOTILAL OSWAL MUTUAL FUND</td>
+            <td class="px-4 py-2">124</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">KOTAK NIFTY200 QUALITY 30 ETF</td>
+            <td class="px-4 py-2">KOTAK MUTUAL FUND</td>
+            <td class="px-4 py-2">76</td>
+          </tr>
+          
+          <tr class="hover:bg-muted transition-colors">
+            <td class="px-4 py-2">GROWW NIFTY 50 ETF</td>
+            <td class="px-4 py-2">GROWW MUTUAL FUND</td>
+            <td class="px-4 py-2">65</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </section>
   </div>
+
 </body>
 </html>
