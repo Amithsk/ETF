@@ -1,0 +1,35 @@
+/* etf_site.css */
+
+body {
+  transition: background 0.3s, color 0.3s;
+}
+
+.tile-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s;
+  border: none;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+}
+
+.tile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(93, 93, 255, 0.1);
+  background: linear-gradient(135deg, #f5f7ff, #eef1ff);
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
