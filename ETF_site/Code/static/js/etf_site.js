@@ -1,31 +1,30 @@
-// etf_site.js
+// Theme Toggle
+document.addEventListener("DOMContentLoaded", function () {
+  const toggleBtn = document.getElementById("theme-toggle");
+  const icon = toggleBtn.querySelector("i");
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Theme toggle
-  const themeBtn = document.getElementById("theme-toggle");
-  themeBtn?.addEventListener("click", () => {
-    document.body.classList.toggle("bg-dark");
-    document.body.classList.toggle("text-white");
+  toggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("light-mode");
 
-    const icon = themeBtn.querySelector("i");
+    // Icon change
     icon.classList.toggle("bi-moon-fill");
     icon.classList.toggle("bi-sun-fill");
   });
 
-  // Card clicks reveal sections
-  const cards = document.querySelectorAll(".tile-card");
-  cards.forEach(card => {
-    card.addEventListener("click", () => {
-      const target = card.dataset.target;
+  // Tile click -> toggle sections
+  document.querySelectorAll(".tile-card").forEach((tile) => {
+    tile.addEventListener("click", () => {
+      const targetId = tile.getAttribute("data-target");
+      const sections = ["etf-section", "category-section", "list-fund"];
 
-      ["etf-section", "category-section", "fund-section"].forEach(id => {
-        const section = document.getElementById(id);
-        if (section) {
-          if (id === target) {
-            section.classList.remove("d-none");
-          } else {
-            section.classList.add("d-none");
-          }
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === targetId) {
+          el.classList.toggle("d-none");
+          el.classList.add("fade-in");
+        } else {
+          el.classList.add("d-none");
         }
       });
     });

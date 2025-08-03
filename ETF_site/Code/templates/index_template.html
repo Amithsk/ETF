@@ -14,6 +14,7 @@
 </head>
 <body class="bg-body text-body">
 
+  <!-- Navbar -->
   <nav class="navbar navbar-light bg-white shadow-sm">
     <div class="container d-flex justify-content-between align-items-center">
       <h2 class="fw-bold mb-0">ETF Dashboard</h2>
@@ -24,6 +25,7 @@
   </nav>
 
   <main class="container py-5">
+
     <!-- Summary Tiles -->
     <div class="row g-4 mb-5">
       <div class="col-md-4">
@@ -93,20 +95,33 @@
     </section>
 
     <!-- Section: Fund Houses -->
-    <section id="fund-section" class="d-none fade-in">
-      <h4>Fund Houses</h4>
-      <ul class="list-group mt-3">
-        {% for fh in etfs | map(attribute='etf_fundhouse_name') | unique %}
-        <li class="list-group-item">{{ fh }}</li>
+    <section id="fund-section" class="d-none fade-in mb-5">
+      <h3 class="mb-4">Mutual Fund Houses ({{ total_funds }})</h3>
+      <div class="row g-4">
+        {% for fundhouse in fund_houses %}
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card shadow-sm h-100 bg-card text-foreground border-0">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <i class="bi bi-building fs-4 text-purple"></i>
+                <span class="badge bg-secondary">{{ fundhouse.count }} Funds</span>
+              </div>
+              <h5 class="card-title fw-semibold text-purple">{{ fundhouse.name }}</h5>
+              <p class="mb-1"><strong>AUM:</strong> ₹{{ fundhouse.aum }} Cr</p>
+              <p class="mb-0"><strong>Performance:</strong> <span class="text-success">{{ fundhouse.performance }}%</span></p>
+            </div>
+          </div>
+        </div>
         {% endfor %}
-      </ul>
+      </div>
     </section>
+
   </main>
 
-  <!-- Bootstrap Bundle -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
   <!-- Custom JS -->
   <script src="etf_site.js"></script>
+
 </body>
 </html>

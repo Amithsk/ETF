@@ -5,6 +5,7 @@ import os
 import urllib
 from pathlib import Path
 import shutil
+from collections import defaultdict
 
 def fetch_db_connection():
     password = os.getenv('MYSQL_PASSWORD')
@@ -22,7 +23,28 @@ def compute_summary(etfs):
     total_funds      = len({e['etf_fundhouse_name']    for e in etfs})
     return total_etfs, total_categories, total_funds
 
-def render_template(etfs, summary):
+
+def compute_fundhouse_summary(etfs):
+    result = []
+    grouped = defaultdict(list)
+    for etf in etfs:
+        grouped[etf['etf_fundhouse_name']].append(etf)
+
+    for name, etf_list in grouped.items():
+        count = len(etf_list)
+        # For example purposes; you can customize how AUM & performance are computed
+        aum = sum(float(etf.get('etf_aum', 0) or 0) for etf in etf_list)
+        perf = sum(float(etf.get('etf_return_1y', 0) or 0) for etf in etf_list) / count if count else 0
+        result.append({
+            "name": name,
+            "count": count,
+            "aum": round(aum),
+            "performance": round(perf, 1)
+        })
+
+    return sorted(result, key=lambda x: x['name'])
+
+def render_template(etfs, summary,fund_houses):
     # ETF_site/Code
     code_dir      = Path(__file__).resolve().parent
     templates_dir = code_dir / "templates"
@@ -34,7 +56,8 @@ def render_template(etfs, summary):
         etfs=etfs,
         total_etfs=total_etfs,
         total_categories=total_categories,
-        total_funds=total_funds
+        total_funds=total_funds,
+        fund_houses=fund_houses
     )
 
     # ETF/output/
@@ -78,5 +101,6 @@ if __name__ == "__main__":
     dburl  = fetch_db_connection()
     etfs   = fetch_etf_data(dburl)
     summary= compute_summary(etfs)
-    render_template(etfs, summary)
+    fund_houses = compute_fundhouse_summary(etfs)
+    render_template(etfs, summary,fund_houses)
     copy_assets()

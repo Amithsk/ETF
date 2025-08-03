@@ -1,35 +1,68 @@
-/* etf_site.css */
-
-body {
-  transition: background 0.3s, color 0.3s;
+/* General Theme Colors */
+body.bg-body {
+  background-color: #0e0f1c;
+  color: #ffffff;
 }
 
+/* Tile Cards */
 .tile-card {
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #181a2f, #0e0f1c);
+  box-shadow: 0 4px 20px rgba(110, 0, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s;
-  border: none;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
 }
-
 .tile-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(93, 93, 255, 0.1);
-  background: linear-gradient(135deg, #f5f7ff, #eef1ff);
+  box-shadow: 0 6px 24px rgba(174, 0, 255, 0.35);
 }
 
+/* Section Cards */
+.card {
+  background-color: #1a1c2e;
+  border-radius: 1rem;
+  border: none;
+  color: #fff;
+}
+.card .card-title {
+  color: #a678f2;
+}
+.card .card-body {
+  font-size: 0.95rem;
+}
+.badge {
+  font-size: 0.7rem;
+}
+
+/* Transition Reveal */
 .fade-in {
-  animation: fadeIn 0.4s ease-in-out both;
+  animation: fadeIn 0.3s ease-in-out both;
 }
-
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Light Theme */
+body.light-mode {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+body.light-mode .tile-card {
+  background: #ffffff;
+  color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+body.light-mode .card {
+  background-color: #ffffff;
+  color: #000;
+}
+body.light-mode .card-title {
+  color: #6f42c1;
 }
