@@ -1,50 +1,68 @@
-/* ==========================================
-   Custom overrides for ETF Dashboard
-   (on top of Bootstrap 5’s CDN)
-   ========================================== */
-
-/* Dark-mode body background & text */
-body.bg-dark {
-  background-color: #111827 !important;  /* Tailwind’s gray-900 */
-  color: #f9fafb    !important;          /* Tailwind’s gray-50 */
+/* General Theme Colors */
+body.bg-body {
+  background-color: #0e0f1c;
+  color: #ffffff;
 }
 
-/* Make the summary cards feel “clickable” */
-.summary-card {
+/* Tile Cards */
+.tile-card {
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #181a2f, #0e0f1c);
+  box-shadow: 0 4px 20px rgba(110, 0, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  transition: transform .2s ease, box-shadow .2s ease;
 }
-.summary-card:hover {
+.tile-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
+  box-shadow: 0 6px 24px rgba(174, 0, 255, 0.35);
 }
 
-/* Card header icons and titles */
-.summary-card .card-body .bi {
-  font-size: 1.5rem;
+/* Section Cards */
+.card {
+  background-color: #1a1c2e;
+  border-radius: 1rem;
+  border: none;
+  color: #fff;
 }
-.summary-card .card-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+.card .card-title {
+  color: #a678f2;
 }
-
-/* Ensure ETF-list cards collapse smoothly */
-.details {
-  transition: height .25s ease;
+.card .card-body {
+  font-size: 0.95rem;
 }
-
-/* Optional: tighten up table list margins */
-.list-group-item {
-  padding: .5rem 1rem;
+.badge {
+  font-size: 0.7rem;
 }
 
-/* Smaller font for code/IDs */
-.details p {
-  font-size: .9rem;
-  margin-bottom: .25rem;
+/* Transition Reveal */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out both;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Tweak buttons a bit */
-button#theme-toggle {
-  border-radius: .375rem;
+/* Light Theme */
+body.light-mode {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+body.light-mode .tile-card {
+  background: #ffffff;
+  color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+body.light-mode .card {
+  background-color: #ffffff;
+  color: #000;
+}
+body.light-mode .card-title {
+  color: #6f42c1;
 }
