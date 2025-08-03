@@ -11,21 +11,18 @@ document.addEventListener("DOMContentLoaded", function () {
     icon.classList.toggle("bi-sun-fill");
   });
 
-  // Tile click -> toggle sections
-  document.querySelectorAll(".tile-card").forEach((tile) => {
-    tile.addEventListener("click", () => {
-      const targetId = tile.getAttribute("data-target");
-      const sections = ["etf-section", "category-section", "list-fund"];
-
-      sections.forEach((id) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        if (id === targetId) {
-          el.classList.toggle("d-none");
-          el.classList.add("fade-in");
-        } else {
-          el.classList.add("d-none");
-        }
+  
+  // Tile click → show relevant section
+  document.querySelectorAll(".tile-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const target = card.dataset.target;
+      document.querySelectorAll("#etf-section, #category-section, #fund-section").forEach((sec) => {
+      if (sec.id === target) {
+        sec.classList.remove("d-none");
+        sec.classList.add("fade-in");
+      } else {
+        sec.classList.add("d-none");
+      }
       });
     });
   });

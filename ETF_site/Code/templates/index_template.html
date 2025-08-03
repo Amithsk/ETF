@@ -86,12 +86,22 @@
 
     <!-- Section: Categories -->
     <section id="category-section" class="d-none fade-in">
-      <h4>ETF Categories</h4>
-      <ul class="list-group mt-3">
-        {% for cat in etfs | map(attribute='etf_asset_category') | unique %}
-        <li class="list-group-item">{{ cat }}</li>
-        {% endfor %}
-      </ul>
+    <h4>ETF Categories</h4>
+      <div class="row g-4 mt-3">
+        {% for category in categories %}
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card shadow-sm h-100 bg-dark text-white border-0">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <i class="bi bi-tags fs-4 text-success"></i>
+              <span class="badge bg-secondary">Category</span>
+              </div>
+              <h5 class="card-title fw-semibold text-info">{{ category.name }}</h5>
+              </div>
+            </div>
+            </div>
+            {% endfor %}
+          </div>
     </section>
 
     <!-- Section: Fund Houses -->

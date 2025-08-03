@@ -14,7 +14,7 @@ def fetch_db_connection():
 
 def fetch_etf_data(dbconnection):
     engine = create_engine(dbconnection)
-    df = pd.read_sql("SELECT * FROM etf", engine)
+    df = pd.read_sql(" select * from etf E join etf_asset A on  E.etf_id = A.idetf_asset ", engine)
     return df.to_dict(orient="records")
 
 def compute_summary(etfs):
@@ -44,7 +44,17 @@ def compute_fundhouse_summary(etfs):
 
     return sorted(result, key=lambda x: x['name'])
 
-def render_template(etfs, summary,fund_houses):
+def extract_categories(etfs):
+    seen = set()
+    categories = []
+    for etf in etfs:
+        category_name = etf['asset_info']
+        if category_name not in seen:
+            seen.add(category_name)
+            categories.append({'name': category_name})
+    return categories
+
+def render_template(etfs, summary,categories,fund_houses):
     # ETF_site/Code
     code_dir      = Path(__file__).resolve().parent
     templates_dir = code_dir / "templates"
@@ -57,6 +67,7 @@ def render_template(etfs, summary,fund_houses):
         total_etfs=total_etfs,
         total_categories=total_categories,
         total_funds=total_funds,
+        categories=categories,
         fund_houses=fund_houses
     )
 
@@ -102,5 +113,6 @@ if __name__ == "__main__":
     etfs   = fetch_etf_data(dburl)
     summary= compute_summary(etfs)
     fund_houses = compute_fundhouse_summary(etfs)
-    render_template(etfs, summary,fund_houses)
+    categories = extract_categories(etfs)
+    render_template(etfs, summary,categories,fund_houses)
     copy_assets()
