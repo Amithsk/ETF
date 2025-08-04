@@ -14,7 +14,7 @@ def fetch_db_connection():
 
 def fetch_etf_data(dbconnection):
     engine = create_engine(dbconnection)
-    df = pd.read_sql(" select * from etf E join etf_asset A on  E.etf_id = A.idetf_asset ", engine)
+    df = pd.read_sql(" select * from etf E join etf_asset A on  E.etf_asset_category = A.idetf_asset", engine)
     return df.to_dict(orient="records")
 
 def compute_summary(etfs):
