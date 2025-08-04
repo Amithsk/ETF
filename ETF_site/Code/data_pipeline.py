@@ -44,14 +44,17 @@ def compute_fundhouse_summary(etfs):
 
     return sorted(result, key=lambda x: x['name'])
 
-def extract_categories(etfs):
-    seen = set()
-    categories = []
+def compute_categories_summary(etfs):
+    category_counts = defaultdict(int)
+
     for etf in etfs:
-        category_name = etf['asset_info']
-        if category_name not in seen:
-            seen.add(category_name)
-            categories.append({'name': category_name})
+        category_name = etf.get('asset_info', 'Unknown')
+        category_counts[category_name] += 1
+
+    categories = [
+        {'name': name, 'count': count}
+        for name, count in sorted(category_counts.items())
+    ]
     return categories
 
 def render_template(etfs, summary,categories,fund_houses):
@@ -113,6 +116,6 @@ if __name__ == "__main__":
     etfs   = fetch_etf_data(dburl)
     summary= compute_summary(etfs)
     fund_houses = compute_fundhouse_summary(etfs)
-    categories = extract_categories(etfs)
+    categories = compute_categories_summary(etfs)
     render_template(etfs, summary,categories,fund_houses)
     copy_assets()
