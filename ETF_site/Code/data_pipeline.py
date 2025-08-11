@@ -52,16 +52,55 @@ def fetch_latest_tracking_error(dbconnection):
         FROM etf_trackingerror t1
         INNER JOIN (
             SELECT etf_id,
-                   MAX(CONCAT(etf_trackingerror_year,
-                              LPAD(MONTH(STR_TO_DATE(etf_trackingerror_month, '%%b')), 2, '0'))) AS max_period
+                   MAX(CONCAT(
+                       etf_trackingerror_year,
+                       LPAD(
+                           CASE etf_trackingerror_month
+                               WHEN 'Jan' THEN 1
+                               WHEN 'Feb' THEN 2
+                               WHEN 'Mar' THEN 3
+                               WHEN 'Apr' THEN 4
+                               WHEN 'May' THEN 5
+                               WHEN 'Jun' THEN 6
+                               WHEN 'Jul' THEN 7
+                               WHEN 'Aug' THEN 8
+                               WHEN 'Sep' THEN 9
+                               WHEN 'Oct' THEN 10
+                               WHEN 'Nov' THEN 11
+                               WHEN 'Dec' THEN 12
+                           END,
+                           2,
+                           '0'
+                       )
+                   )) AS max_period
             FROM etf_trackingerror
             WHERE etf_trackingerror_timeperiod = 'SL'
             GROUP BY etf_id
         ) t2 ON t1.etf_id = t2.etf_id
-           AND CONCAT(t1.etf_trackingerror_year,
-                      LPAD(MONTH(STR_TO_DATE(t1.etf_trackingerror_month, '%%b')), 2, '0')) = t2.max_period
-        WHERE t1.etf_trackingerror_timeperiod = 'SL'
+           AND CONCAT(
+               t1.etf_trackingerror_year,
+               LPAD(
+                   CASE t1.etf_trackingerror_month
+                       WHEN 'Jan' THEN 1
+                       WHEN 'Feb' THEN 2
+                       WHEN 'Mar' THEN 3
+                       WHEN 'Apr' THEN 4
+                       WHEN 'May' THEN 5
+                       WHEN 'Jun' THEN 6
+                       WHEN 'Jul' THEN 7
+                       WHEN 'Aug' THEN 8
+                       WHEN 'Sep' THEN 9
+                       WHEN 'Oct' THEN 10
+                       WHEN 'Nov' THEN 11
+                       WHEN 'Dec' THEN 12
+                   END,
+                   2,
+                   '0'
+               )
+           ) = t2.max_period
+        WHERE t1.etf_trackingerror_timeperiod = 'SL';
     """
+
     try:
         df = pd.read_sql(query, engine)
     finally:
@@ -72,12 +111,17 @@ def fetch_latest_tracking_error(dbconnection):
 def fetch_tracking_error_history(dbconnection):
     engine = create_engine(dbconnection)
     query = """
-        SELECT etf_id, etf_trackingerror_timeperiod, etf_trackingerror_value,
+         SELECT etf_id, etf_trackingerror_timeperiod, etf_trackingerror_value,
                etf_trackingerror_month, etf_trackingerror_year
         FROM etf_trackingerror
         ORDER BY etf_id, etf_trackingerror_timeperiod,
                  etf_trackingerror_year DESC,
-                 MONTH(STR_TO_DATE(etf_trackingerror_month, '%%b')) DESC
+                 CASE etf_trackingerror_month
+                     WHEN 'Jan' THEN 1 WHEN 'Feb' THEN 2 WHEN 'Mar' THEN 3
+                     WHEN 'Apr' THEN 4 WHEN 'May' THEN 5 WHEN 'Jun' THEN 6
+                     WHEN 'Jul' THEN 7 WHEN 'Aug' THEN 8 WHEN 'Sep' THEN 9
+                     WHEN 'Oct' THEN 10 WHEN 'Nov' THEN 11 WHEN 'Dec' THEN 12
+                 END DESC
     """
     try:
         df = pd.read_sql(query, engine)
@@ -100,17 +144,36 @@ def fetch_tracking_error_history(dbconnection):
 def fetch_latest_expense_ratio(dbconnection):
     engine = create_engine(dbconnection)
     query = """
-        SELECT e1.etf_id, e1.etf_expenseratio_value
+       SELECT e1.etf_id, e1.etf_expenseratio_value
         FROM etf_expenseratio e1
         INNER JOIN (
             SELECT etf_id,
-                   MAX(CONCAT(etf_expenseratioyear,
-                              LPAD(MONTH(STR_TO_DATE(etf_expenseratiomonth, '%%b')), 2, '0'))) AS max_period
+                   MAX(CONCAT(
+                       etf_expenseratioyear,
+                       LPAD(
+                           CASE etf_expenseratiomonth
+                               WHEN 'Jan' THEN 1 WHEN 'Feb' THEN 2 WHEN 'Mar' THEN 3
+                               WHEN 'Apr' THEN 4 WHEN 'May' THEN 5 WHEN 'Jun' THEN 6
+                               WHEN 'Jul' THEN 7 WHEN 'Aug' THEN 8 WHEN 'Sep' THEN 9
+                               WHEN 'Oct' THEN 10 WHEN 'Nov' THEN 11 WHEN 'Dec' THEN 12
+                           END, 2, '0'
+                       )
+                   )) AS max_period
             FROM etf_expenseratio
             GROUP BY etf_id
         ) e2 ON e1.etf_id = e2.etf_id
-           AND CONCAT(e1.etf_expenseratioyear,
-                      LPAD(MONTH(STR_TO_DATE(e1.etf_expenseratiomonth, '%%b')), 2, '0')) = e2.max_period
+           AND CONCAT(
+               e1.etf_expenseratioyear,
+               LPAD(
+                   CASE e1.etf_expenseratiomonth
+                       WHEN 'Jan' THEN 1 WHEN 'Feb' THEN 2 WHEN 'Mar' THEN 3
+                       WHEN 'Apr' THEN 4 WHEN 'May' THEN 5 WHEN 'Jun' THEN 6
+                       WHEN 'Jul' THEN 7 WHEN 'Aug' THEN 8 WHEN 'Sep' THEN 9
+                       WHEN 'Oct' THEN 10 WHEN 'Nov' THEN 11 WHEN 'Dec' THEN 12
+                   END, 2, '0'
+               )
+           ) = e2.max_period;
+  
     """
     try:
         df = pd.read_sql(query, engine)
@@ -122,10 +185,15 @@ def fetch_latest_expense_ratio(dbconnection):
 def fetch_expense_ratio_history(dbconnection):
     engine = create_engine(dbconnection)
     query = """
-        SELECT etf_id, etf_expenseratio_value, etf_expenseratiomonth, etf_expenseratioyear
+         SELECT etf_id, etf_expenseratio_value, etf_expenseratiomonth, etf_expenseratioyear
         FROM etf_expenseratio
         ORDER BY etf_id, etf_expenseratioyear DESC, 
-                 MONTH(STR_TO_DATE(etf_expenseratiomonth, '%%b')) DESC
+                 CASE etf_expenseratiomonth
+                     WHEN 'Jan' THEN 1 WHEN 'Feb' THEN 2 WHEN 'Mar' THEN 3
+                     WHEN 'Apr' THEN 4 WHEN 'May' THEN 5 WHEN 'Jun' THEN 6
+                     WHEN 'Jul' THEN 7 WHEN 'Aug' THEN 8 WHEN 'Sep' THEN 9
+                     WHEN 'Oct' THEN 10 WHEN 'Nov' THEN 11 WHEN 'Dec' THEN 12
+                 END DESC
     """
     try:
         df = pd.read_sql(query, engine)
@@ -152,13 +220,31 @@ def fetch_latest_aum(dbconnection):
         FROM etf_aum a1
         INNER JOIN (
             SELECT etf_id,
-                   MAX(CONCAT(etf_aum_year,
-                              LPAD(MONTH(STR_TO_DATE(etf_aum_month, '%%b')), 2, '0'))) AS max_period
+                   MAX(CONCAT(
+                       etf_aum_year,
+                       LPAD(
+                           CASE etf_aum_month
+                               WHEN 'Jan' THEN 1 WHEN 'Feb' THEN 2 WHEN 'Mar' THEN 3
+                               WHEN 'Apr' THEN 4 WHEN 'May' THEN 5 WHEN 'Jun' THEN 6
+                               WHEN 'Jul' THEN 7 WHEN 'Aug' THEN 8 WHEN 'Sep' THEN 9
+                               WHEN 'Oct' THEN 10 WHEN 'Nov' THEN 11 WHEN 'Dec' THEN 12
+                           END, 2, '0'
+                       )
+                   )) AS max_period
             FROM etf_aum
             GROUP BY etf_id
         ) a2 ON a1.etf_id = a2.etf_id
-           AND CONCAT(a1.etf_aum_year,
-                      LPAD(MONTH(STR_TO_DATE(a1.etf_aum_month, '%%b')), 2, '0')) = a2.max_period
+           AND CONCAT(
+               a1.etf_aum_year,
+               LPAD(
+                   CASE a1.etf_aum_month
+                       WHEN 'Jan' THEN 1 WHEN 'Feb' THEN 2 WHEN 'Mar' THEN 3
+                       WHEN 'Apr' THEN 4 WHEN 'May' THEN 5 WHEN 'Jun' THEN 6
+                       WHEN 'Jul' THEN 7 WHEN 'Aug' THEN 8 WHEN 'Sep' THEN 9
+                       WHEN 'Oct' THEN 10 WHEN 'Nov' THEN 11 WHEN 'Dec' THEN 12
+                   END, 2, '0'
+               )
+           ) = a2.max_period;
     """
     try:
         df = pd.read_sql(query, engine)
@@ -173,7 +259,12 @@ def fetch_aum_history(dbconnection):
         SELECT etf_id, etf_aum, etf_aum_month, etf_aum_year
         FROM etf_aum
         ORDER BY etf_id, etf_aum_year DESC, 
-                 MONTH(STR_TO_DATE(etf_aum_month, '%%b')) DESC
+                 CASE etf_aum_month
+                     WHEN 'Jan' THEN 1 WHEN 'Feb' THEN 2 WHEN 'Mar' THEN 3
+                     WHEN 'Apr' THEN 4 WHEN 'May' THEN 5 WHEN 'Jun' THEN 6
+                     WHEN 'Jul' THEN 7 WHEN 'Aug' THEN 8 WHEN 'Sep' THEN 9
+                     WHEN 'Oct' THEN 10 WHEN 'Nov' THEN 11 WHEN 'Dec' THEN 12
+                 END DESC
     """
     try:
         df = pd.read_sql(query, engine)
@@ -312,6 +403,7 @@ if __name__ == "__main__":
     summary = compute_summary(etfs)
     fund_houses = compute_fundhouse_summary(etfs)
     categories = compute_categories_summary(etfs)
+    
 
     render_template(
         etfs,
