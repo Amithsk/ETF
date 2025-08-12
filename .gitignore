@@ -1,2 +1,5 @@
 #ignore the virtual env
 etfdataenv/
+
+#Ignore the .txt file
+*.txt
