@@ -3,6 +3,7 @@ import time
 import csv
 import os
 from datetime import datetime
+import random
 
 home_url = 'https://www.nseindia.com/market-data/exchange-traded-funds-etf'
 api_url = 'https://www.nseindia.com/api/etf'
@@ -32,6 +33,10 @@ def establish_session():
         return None
 
 def fetch_etf_data(session):
+    # Add random wait 0–15 min after cutoff
+    wait_seconds = random.randint(0,30)
+    print(f"Waiting {wait_seconds} seconds before fetching today's data...")
+    time.sleep(wait_seconds)
     if not session:
         return None
     try:
@@ -69,9 +74,13 @@ def main():
     if not session:
         print("Session establishment failed")
         return
+    wait_seconds = random.randint(30, 180)
+    print(f"Waiting {wait_seconds} seconds before fetching today's data...")
+    time.sleep(wait_seconds)
 
     json_data = fetch_etf_data(session)
     if json_data:
+
         today_str = datetime.now().strftime('%Y-%m-%d')
         csv_file_name = f'ETF_data_{today_str}.csv'
         csv_file_path = os.path.join(os.getcwd(), csv_file_name)
