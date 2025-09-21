@@ -161,14 +161,14 @@ def db_update(file_location, file_pattern, excluded_etfs):
             etf_id = result[0]
             print(f"Inserting TER for {scheme_name} (ID: {etf_id}) - {return_month} {return_year} - {expense_ratio}")
             try:
-                cursor.execute(insert_sql, (etf_id, expense_ratio, return_month, return_year))
+                #cursor.execute(insert_sql, (etf_id, expense_ratio, return_month, return_year))
                 print()
             except Exception as e:
                 print(f"Failed to insert TER for {scheme_name}: {e}")
         else:
             print(f"ETF not found: {scheme_name}")
 
-    connection.commit()
+    #connection.commit()
     cursor.close()
     connection.close()
 
@@ -176,7 +176,7 @@ def db_update(file_location, file_pattern, excluded_etfs):
 # Step 3: Process etf expense details details files in the repository location
 def process_etf_expenseratio(excluded_etfs):
     file_location=r'D:\ETF_Data\ETFDataProcessing\ETFProcessedData\ExpenseRatio'
-    file_pattern="ETF_Data_Jan24.*"     
+    file_pattern="ETF_Data_*"     
     process_csv_file(file_location,file_pattern,excluded_etfs)
     db_update(file_location,file_pattern,excluded_etfs)
 
