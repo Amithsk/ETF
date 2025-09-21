@@ -54,14 +54,14 @@ def process_csv_file(file_location, file_pattern,excluded_etfs):
     monthinfo = pd.to_datetime(df['Month'].iloc[0]).strftime('%B')
 
 
-    if "Scheme Name" not in df.columns:
+    if "Scheme_Name" not in df.columns:
         print("Missing 'Scheme Name' column in Excel.")
         return
 
     missing_rows = []
 
     for _, row in df.iterrows():
-        scheme_name = str(row["Scheme Name"]).strip()
+        scheme_name = str(row["Scheme_Name"]).strip()
         normalized_scheme_name = normalize_etf_name(scheme_name)
        
         
@@ -118,13 +118,13 @@ def db_update(file_location, file_pattern, excluded_etfs):
 
     df = pd.read_excel(file_to_process)
 
-    if "Scheme Name" not in df.columns or "Total TER (%)" not in df.columns:
+    if "Scheme_Name" not in df.columns or "Total TER (%)" not in df.columns:
         print("Missing required columns in Excel.")
         return
 
     for _, row in df.iterrows():
         
-        scheme_name = str(row["Scheme Name"]).strip()
+        scheme_name = str(row["Scheme_Name"]).strip()
         normalized_scheme_name = normalize_etf_name(scheme_name)
 
         if normalized_scheme_name in excluded_etfs:
@@ -202,7 +202,8 @@ if __name__ == '__main__':
     "SBI S&P BSE Sensex Next 50 ETF",
     "SBI BSE Sensex Next 50 ETF",
     "Motilal Oswal Nifty 50 ETF",
-    "Nippon India ETF Nifty CPSE Bond Plus SDL Sep2024 50:50"
+    "Nippon India ETF Nifty CPSE Bond Plus SDL Sep2024 50:50",
+    "Baroda BNP Paribas Gold ETF Fund of Fund"
     ]
     excluded_etfs = set(normalize_etf_name(name) for name in excluded_etfs_raw)
     process_etf_expenseratio(excluded_etfs)
