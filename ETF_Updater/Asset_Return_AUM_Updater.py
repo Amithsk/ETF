@@ -96,6 +96,10 @@ def format_asset_name(asset_name):
     asset_name = re.sub(r'(?i)\bNIFTY\s*INDIA\s*(NEW\s*AGE\s*)?CONSUMPTION\s*(TRI|Total\s+Return\s+Index|INDEX)?\b',
     'NIFTY INDIA CONSUMPTION INDEX',asset_name)
 
+    # Rule 9+: Specific mapping for Shariah
+    if re.search(r'(?i)\bNifty\s*50\s*Shariah\s*Index\b', asset_name):
+        return "SHARIAH INDEX"
+
     # Rule 11: Remove the extra 'Index' if present twice
     asset_name = re.sub(r'(Index)(\s*|\u00A0)+Index', r'\1', asset_name, flags=re.IGNORECASE)
 
