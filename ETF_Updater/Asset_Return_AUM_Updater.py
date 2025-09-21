@@ -232,7 +232,7 @@ def update_db(df, monthinfo, excluded_assets):
            
 
 if __name__ == '__main__':
-    exclude = ['BSE PSU Bank TRI','Nifty MidSmall Healthcare TRI']
+    exclude = ['BSE PSU Bank TRI','Nifty MidSmall Healthcare TRI','BSE 100 TRI']
     loc = r'D:\ETF_Data\ETFDataProcessing\ETFProcessedData\AUM_Returns'
     pattern = 'Benchmark_Data_*-*'
     df, monthinfo = load_and_format(loc, pattern)
