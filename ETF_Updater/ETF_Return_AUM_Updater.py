@@ -258,7 +258,8 @@ if __name__ == '__main__':
     "Nippon India ETF BSE Sensex",
     "Nippon India ETF BSE Sensex Next 50",
     "SBI BSE Sensex ETF",
-    "SBI BSE Sensex Next 50 ETF"
+    "SBI BSE Sensex Next 50 ETF",
+    "SBI BSE 100 ETF"
     ]
     process_etf_return(excluded_etfs)
     #process_etf_aum(excluded_etfs)
