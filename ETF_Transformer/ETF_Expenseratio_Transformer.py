@@ -1,11 +1,10 @@
 import pandas as pd
 from pathlib import Path
-import magic
 
 # === CONFIGURATION ===
 # Paths to the two input Excel files
-etf_file = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\ExpenseRatio\ETF_Mar_25.xlsx'
-gold_file = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\ExpenseRatio\Gold_Mar_25.xlsx'
+etf_file = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\ExpenseRatio\Gold_Aug_25.xlsx'
+gold_file = r'D:\ETF_Data\ETFDataProcessing\ETFRawData\ExpenseRatio\ETF_Aug_25.xlsx'
 
 # Output directory
 destination_dir = Path(r'D:\ETF_Data\ETFDataProcessing\ETFProcessedData\ExpenseRatio')
@@ -13,10 +12,10 @@ destination_dir.mkdir(parents=True, exist_ok=True)
 
 # === COLUMNS TO EXTRACT ===
 columns_required = [
-    'Scheme Name',
-    'TER Date',
-    'Regular Plan - Total TER (%)',
-    'Direct Plan - Total TER (%)'
+    'Scheme_Name', #Name of the ETF Scheme
+    'TER_Date', #Date of Total Expense Ratio (TER)
+    'R_TER',#Regular Plan - Total TER (%)
+    'D_TER'  #Direct Plan - Total TER (%) 
 ]
 
 def debug_etf_trace(df, etf_name, regular_col='Regular Plan - Total TER (%)', direct_col='Direct Plan - Total TER (%)'):
@@ -48,8 +47,8 @@ df = pd.concat([df1, df2], ignore_index=True)
 # === STEP 2: CLEANING AND PREPROCESSING ===
 
 # Check if both TER columns exist
-regular_col = 'Regular Plan - Total TER (%)'
-direct_col = 'Direct Plan - Total TER (%)'
+regular_col = 'R_TER'  #Regular Plan - Total TER (%) 
+direct_col = 'D_TER'  #Direct Plan - Total TER (%)
 
 if regular_col not in df.columns and direct_col not in df.columns:
     raise ValueError("Neither Regular nor Direct TER columns found in the files.")
@@ -66,10 +65,10 @@ df['TER (%)'] = df.apply(
 )
 
 # Convert TER Date to Month period
-df['Month'] = pd.to_datetime(df['TER Date']).dt.to_period('M')
+df['Month'] = pd.to_datetime(df['TER_Date']).dt.to_period('M')
 
 # Keep only relevant data
-df = df[['Scheme Name', 'Month', 'TER (%)']].dropna()
+df = df[['Scheme_Name', 'Month', 'TER (%)']].dropna()
 #To debug for any issue
 #debug_etf_trace(df, "DSP Nifty Bank ETF")
 
@@ -77,7 +76,7 @@ df = df[['Scheme Name', 'Month', 'TER (%)']].dropna()
 
 # === STEP 3: MONTHLY AVERAGE CALCULATION ===
 monthly_ter = (
-    df.groupby(['Scheme Name', 'Month'])['TER (%)']
+    df.groupby(['Scheme_Name', 'Month'])['TER (%)']
     .mean()
     .reset_index()
     .rename(columns={'TER (%)': 'Total TER (%)'})
